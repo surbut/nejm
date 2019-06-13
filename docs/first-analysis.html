@@ -518,10 +518,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsurbutnejmtreecca3e9704a593c3ce2bd023a65d3d1bc18b846a7targetblankcca3e97a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/surbut/nejm/tree/cca3e9704a593c3ce2bd023a65d3d1bc18b846a7" target="_blank">cca3e97</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsurbutnejmtree2d415aaac986b3e5180e70866a5bd3e762643102targetblank2d415aaa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/surbut/nejm/tree/2d415aaac986b3e5180e70866a5bd3e762643102" target="_blank">2d415aa</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomsurbutnejmtreecca3e9704a593c3ce2bd023a65d3d1bc18b846a7targetblankcca3e97a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomsurbutnejmtree2d415aaac986b3e5180e70866a5bd3e762643102targetblank2d415aaa" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -569,6 +569,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/surbut/nejm/blob/2d415aaac986b3e5180e70866a5bd3e762643102/analysis/first-analysis.Rmd" target="_blank">2d415aa</a>
+</td>
+<td>
+Sarah Urbut
+</td>
+<td>
+2019-06-13
+</td>
+<td>
+wflow_publish(“analysis/first-analysis.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/surbut/nejm/c29a53d88bad35d4f53d14a271742da0e6212f2e/docs/first-analysis.html" target="_blank">c29a53d</a>
+</td>
+<td>
+Sarah Urbut
+</td>
+<td>
+2019-06-13
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -730,8 +764,7 @@ Sarah Urbut
 <p><span class="math display">\[\theta \sim \pi_{0} \delta_{0} + \pi_{1} N (0,\sigma^2)\]</span> where <span class="math inline">\(\sigma^2 =1\)</span></p>
 <p>We can try varying levels of skepticisim, with <span class="math inline">\(\pi_{0}\)</span> = 0.10,0.50, and 0.90 for confident, moderate, and skeptical accordingly.</p>
 <p><span class="math inline">\(\pi=p(z=k)\)</span> is the prior probability of a data point arising from a particular component, while the posterior weight or `responsibility’ represents the probability of the data arising from a particualr component given the data observed. Here, each component corresponds to one of the two available densities.</p>
-<p><span class="math display">\[\tilde \pi = p(z=k|data) = \frac{p(data|z=k)}{\sum_k{p(data|z=k)}}=\frac{p(data|z=k)}{\pi_{0} p(data|\delta_{0})+\pi_{1} p(data|N(0,1))}\]</span></p>
-<p>Becuase the probability of having a non-zero observation arise from the <span class="math inline">\(\delta_{0}\)</span> component is 0, we use a trivially small value of <span class="math inline">\(\sigma^2\)</span> for this component.</p>
+<p><span class="math display">\[\tilde \pi = p(z=k|data) = \frac{p(data|z=k)}{\sum_k{p(data|z=k)}}=\frac{p(data|z=k)}{\pi_{0} p(data|N(0,\hat{se})+\pi_{1} p(data|N(0,N(0,\hat{se}+1))}\]</span></p>
 <pre class="r"><code>sdlik=sqrt(1+dataSE^2)
 
 optimistic=0.90*dnorm(0.88,mean = 0,sd=sdlik)/(0.90*dnorm(0.88,mean = 0,sd=sdlik)+0.10*dnorm(0.88,mean = 0,sd=dataSE))
