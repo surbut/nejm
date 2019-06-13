@@ -64,7 +64,7 @@ $\pi=p(z=k)$ is the prior probability of a data point arising from a particular 
 
 $$\tilde \pi = p(z=k|data) = \frac{p(data|z=k)}{\sum_k{p(data|z=k)}}=\frac{p(data|z=k)}{\pi_{0} p(data|N(0,\hat{se}^{2}+\sigma^{2}_{0\delta_{0}})+\pi_{1} p(data|N(0,\hat{se}^2+\sigma^{2}_{0k}))}$$
 
-The marginal $p(data|N(0,\hat{se}^2+\sigma^{2}_{0k})$ is akin to evaluating the normal density $N(0,\hat{se}^2+\sigma^{2}_{0k}$ at $\hat{\theta}$.
+The marginal $p(data|N(0,\hat{se}^2+\sigma^{2}_{0k})$ is akin to evaluating the normal density $N(0,\hat{se}^2+\sigma^{2}_{0k})$ at $\hat{\theta}$.
 
 ```{r}
 
