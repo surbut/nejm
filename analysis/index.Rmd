@@ -11,6 +11,6 @@ editor_options:
 
 In this repo, we reanalysis the NEJM paper using a Bayseian mixture model.
 
-[Here](first-analysis.Rmd) we show how modeling the posterior distribution of the difference between two interventions can benefit from Bayesian techniques.
+[Here](analysis/first-analysis.Rmd) we show how modeling the posterior distribution of the difference between two interventions can benefit from Bayesian techniques.
 
 
