@@ -62,9 +62,8 @@ We can try varying levels of skepticisim, with $\pi_{0}$ = 0.10,0.50, and 0.90 f
 
 $\pi=p(z=k)$ is the prior probability of a data point arising from a particular component, while the posterior weight or `responsibility' represents the probability of the data arising from a particualr component given the data observed. Here, each component corresponds to one of the two available densities.
 
-$$\tilde \pi = p(z=k|data) = \frac{p(data|z=k)}{\sum_k{p(data|z=k)}}=\frac{p(data|z=k)}{\pi_{0} p(data|\delta_{0})+\pi_{1} p(data|N(0,1))}$$
+$$\tilde \pi = p(z=k|data) = \frac{p(data|z=k)}{\sum_k{p(data|z=k)}}=\frac{p(data|z=k)}{\pi_{0} p(data|N(0,\hat{se})+\pi_{1} p(data|N(0,N(0,\hat{se}+1))}$$
 
-Becuase the probability of having a non-zero observation arise from the $\delta_{0}$ component is 0, we use a trivially small value of $\sigma^2$ for this component.
 
 ```{r}
 
