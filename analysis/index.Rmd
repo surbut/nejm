@@ -8,4 +8,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-Welcome to my research website.
+
+[Here](first-analysis.Rmd) we show how modeling the posterior distribution of the difference between two interventions can benefit from Bayesian techniques.
+
+
