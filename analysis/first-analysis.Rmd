@@ -1,0 +1,131 @@
+---
+title: "first-analysis"
+author: "surbut"
+date: "2019-06-06"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+
+
+In this document, we aim to run a post-hoc Bayesian analysis of the results in [Thiele et al](https://www.nejm.org/doi/full/10.1056/NEJMoa1808788). In table 3 of this paper, they show that the relative risk of death from any cause at 1 year is 0.88 (0.76-1.01) for Culprit only vs Multivessel PCI. This is equivalent to a log Odds ratio of $$log \frac{0.88}{0.12}\approx 2$$. A Bayesian analysis with an improper (Jeffrey's) prior on $\theta$ would result in acredible interval identical to the confidence interval with a standard error equivalent to 0.15 from the formula below.
+
+We know that the $$SE(logθ) = \sqrt{(1/n_{11} + 1/n_{12} + 1/n_{21} + 1/n_{22})}.$$
+
+If we assume a generous, perhaps 'ridiculous' prior on $\theta=OR$ of $\theta \sim N(0,1)$, then we would arrive a posterior estimate of $$\theta|\hat{\theta},\hat{s^{2}},\sigma^2$$ using simple conjugate normal with $\theta \sim N(0,1)$ and data $\hat{\theta}$=0.88, $\hat{s}$=0.15.
+
+$$\tilde{\theta}\sim{\frac {\sigma _{0}^{2}}{ \sigma ^{2}+\sigma _{0}^{2}} \hat {\theta} +  {\frac {\sigma _{0}^{2}}{ \sigma ^{2}+\sigma _{0}^{2}} \theta_{0}}}$$
+
+$$\tilde{\sigma^2}\sim ( \frac {1}{ \sigma ^{2}} + \frac{1}{\sigma _{0}^{2}})^{-1}$$
+
+
+
+
+
+```{r computepost}
+##SE log OR
+
+dataSE=sqrt(1/172+1/(344-172) + 1/194 + 1/(341-194))
+post_mean=function(priormean,priorsd,datamean,datase){
+  priorsd^2/(datase^2+priorsd^2)*datamean+datase^2/(datase^2+priorsd^2)*priormean}
+
+post_var=function(priorsd,datase){
+  1/(1/datase^2+1/priorsd^2)}
+
+pm=post_mean(priormean = 0,priorsd = 1,datamean = 0.88,datase = dataSE)
+pv=post_var(priorsd = 1,datase = dataSE)
+
+```
+
+We can sample from this distribution and plot the 95% Credible intervals:
+
+```{r sampleplot}
+
+rsamp=rnorm(100000,mean=pm,sd=sqrt(pv))
+
+hist(rsamp,freq=F,nclass = 100)
+
+a=qnorm(p =0.025,mean = pm,sd=sqrt(pv))
+b=qnorm(p =0.975,mean = pm,sd=sqrt(pv))
+abline(v=a)
+abline(v=b)
+
+```
+
+Now, let's try various levels of confidence such that $\theta$ is simulated as a mixture of distirbutions with point mass on 0.
+
+$$\theta \sim \pi_{0} \delta_{0} + \pi_{1} N (0,\sigma^2)$$ where $\sigma^2 =1$
+
+We can try varying levels of skepticisim, with $\pi_{0}$ = 0.10,0.50, and 0.90 for confident, moderate, and skeptical accordingly.
+
+$\pi=p(z=k)$ is the prior probability of a data point arising from a particular component, while the posterior weight or `responsibility' represents the probability of the data arising from a particualr component given the data observed. Here, each component corresponds to one of the two available densities.
+
+$$\tilde \pi = p(z=k|data) = \frac{p(data|z=k)}{\sum_k{p(data|z=k)}}=\frac{p(data|z=k)}{\pi_{0} p(data|\delta_{0})+\pi_{1} p(data|N(0,1))}$$
+
+Becuase the probability of having a non-zero observation arise from the $\delta_{0}$ component is 0, we use a trivially small value of $\sigma^2$ for this component.
+
+```{r}
+
+sdlik=sqrt(1+dataSE^2)
+
+optimistic=0.90*dnorm(0.88,mean = 0,sd=sdlik)/(0.90*dnorm(0.88,mean = 0,sd=sdlik)+0.10*dnorm(0.88,mean = 0,sd=dataSE))
+
+moderate=0.50*dnorm(0.88,mean = 0,sd=sdlik)/(0.50*dnorm(0.88,mean = 0,sd=sdlik)+0.50*dnorm(0.88,mean = 0,sd=dataSE))
+
+skeptical=0.10*dnorm(0.88,mean = 0,sd=sdlik)/sum(0.10*dnorm(0.88,mean = 0,sd=sdlik)+0.90*dnorm(0.88,mean = 0,sd=dataSE))
+```
+
+Then, we can run simulations according to these componenets to determine the density
+
+FOr the optimistic simulation:
+
+
+```{r}
+
+nsim=100000
+sims=rbinom(n=nsim,1,prob=0.5)
+optim=NULL
+for(i in 1:nsim){
+  a=rbinom(n=1,1,prob=optimistic)
+  pm=post_mean(priormean=0,priorsd=a*1,datamean=0.88,datase=dataSE)
+  ps=sqrt(post_var(priorsd = a*1,datase = dataSE))
+  b=rnorm(1,mean=pm,sd=sqrt(ps))
+ optim[i]=b
+}
+
+hist(optim,nclass=100)
+
+
+moder=NULL
+for(i in 1:nsim){
+  a=rbinom(n=1,1,prob=moderate)
+  pm=post_mean(priormean=0,priorsd=a*1,datamean=0.88,datase=dataSE)
+  ps=sqrt(post_var(priorsd = a*1,datase = dataSE))
+  b=rnorm(1,mean=pm,sd=sqrt(ps))
+ moder[i]=b
+}
+
+hist(moder,nclass=100)
+
+
+skept=NULL
+for(i in 1:nsim){
+  a=rbinom(n=1,1,prob=skeptical)
+  pm=post_mean(priormean=0,priorsd=a*1,datamean=0.88,datase=dataSE)
+  ps=sqrt(post_var(priorsd = a*1,datase = dataSE))
+  b=rnorm(1,mean=pm,sd=sqrt(ps))
+ skept[i]=b
+}
+
+hist(skept,nclass=100)
+
+
+
+
+
+```{r}
+
+```
+
