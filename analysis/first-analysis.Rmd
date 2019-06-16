@@ -10,11 +10,11 @@ editor_options:
 ## Introduction
 
 
-In this document, we aim to run a post-hoc Bayesian analysis of the results in [Thiele et al](https://www.nejm.org/doi/full/10.1056/NEJMoa1808788). In table 3 of this paper, they show that the relative risk of death from any cause at 1 year is 0.88 (0.76-1.01) for Culprit only vs Multivessel PCI. This is equivalent to a log Odds ratio of $$log \frac{0.88}{0.12}\approx 2$$. A Bayesian analysis with an improper (Jeffrey's) prior on $\theta$ would result in acredible interval identical to the confidence interval with a standard error equivalent to 0.15 from the formula below.
+In this document, we aim to run a post-hoc Bayesian analysis of the results in [Thiele et al](https://www.nejm.org/doi/full/10.1056/NEJMoa1808788). In table 3 of this paper, they show that the relative risk of death from any cause at 1 year is 0.88 (0.76-1.01) for Culprit only vs Multivessel PCI. This is equivalent to a log Odds ratio of $$log \frac{[172/172]}{[194/147]}/ \approx -0.27$$. A Bayesian analysis with an improper (Jeffrey's) prior on $\theta$ would result in acredible interval identical to the confidence interval with a standard error equivalent to 0.15 from the formula below.
 
 We know that the $$SE(logθ) = \sqrt{(1/n_{11} + 1/n_{12} + 1/n_{21} + 1/n_{22})}.$$
 
-If we assume a generous, perhaps 'ridiculous' prior on $\theta=OR$ of $\theta \sim N(0,1)$, then we would arrive a posterior estimate of $$\theta|\hat{\theta},\hat{s^{2}},\sigma^2$$ using simple conjugate normal with $\theta \sim N(0,1)$ and data $\hat{\theta}$=0.88, $\hat{s}$=0.15.
+If we assume a generous, perhaps 'ridiculous' prior on $\theta=OR$ of $\theta \sim N(0,1)$, then we would arrive a posterior estimate of $$\theta|\hat{\theta},\hat{s^{2}},\sigma^2$$ using simple conjugate normal with $\theta \sim N(0,1)$ and data $\hat{\theta}$=-0.28, $\hat{s}$=0.15.
 
 $$\tilde{\theta}\sim{\frac {\sigma _{0}^{2}}{ \sigma ^{2}+\sigma _{0}^{2}} \hat {\theta} +  {\frac {\sigma _{0}^{2}}{ \sigma ^{2}+\sigma _{0}^{2}} \theta_{0}}}$$
 
@@ -34,7 +34,7 @@ post_mean=function(priormean,priorsd,datamean,datase){
 post_var=function(priorsd,datase){
   1/(1/datase^2+1/priorsd^2)}
 
-pm=post_mean(priormean = 0,priorsd = 1,datamean = 0.88,datase = dataSE)
+pm=post_mean(priormean = 0,priorsd = 1,datamean = -0.28,datase = dataSE)
 pv=post_var(priorsd = 1,datase = dataSE)
 
 ```
@@ -72,11 +72,11 @@ The marginal $p(data|N(0,\hat{se}^2+\sigma^{2}_{0k})$ is akin to evaluating the 
 
 sdlik=sqrt(1+dataSE^2)
 
-optimistic=0.90*dnorm(0.88,mean = 0,sd=sdlik)/(0.90*dnorm(0.88,mean = 0,sd=sdlik)+0.10*dnorm(0.88,mean = 0,sd=dataSE))
+optimistic=0.90*dnorm(-0.28,mean = 0,sd=sdlik)/(0.90*dnorm(-0.28,mean = 0,sd=sdlik)+0.10*dnorm(-0.28,mean = 0,sd=dataSE))
 
-moderate=0.50*dnorm(0.88,mean = 0,sd=sdlik)/(0.50*dnorm(0.88,mean = 0,sd=sdlik)+0.50*dnorm(0.88,mean = 0,sd=dataSE))
+moderate=0.50*dnorm(-0.28,mean = 0,sd=sdlik)/(0.50*dnorm(-0.28,mean = 0,sd=sdlik)+0.50*dnorm(-0.28,mean = 0,sd=dataSE))
 
-skeptical=0.10*dnorm(0.88,mean = 0,sd=sdlik)/sum(0.10*dnorm(0.88,mean = 0,sd=sdlik)+0.90*dnorm(0.88,mean = 0,sd=dataSE))
+skeptical=0.10*dnorm(-0.28,mean = 0,sd=sdlik)/sum(0.10*dnorm(-0.28,mean = 0,sd=sdlik)+0.90*dnorm(-0.28,mean = 0,sd=dataSE))
 ```
 
 Then, we can run simulations according to these componenets to determine the density
@@ -85,13 +85,13 @@ FOr the optimistic simulation:
 
 
 ```{r}
-
+dm=-0.28
 nsim=100000
 sims=rbinom(n=nsim,1,prob=0.5)
 optim=NULL
 for(i in 1:nsim){
   a=rbinom(n=1,1,prob=optimistic)
-  pm=post_mean(priormean=0,priorsd=a*1,datamean=0.88,datase=dataSE)
+  pm=post_mean(priormean=0,priorsd=a*1,datamean=dm,datase=dataSE)
   ps=sqrt(post_var(priorsd = a*1,datase = dataSE))
   b=rnorm(1,mean=pm,sd=sqrt(ps))
  optim[i]=b
@@ -103,10 +103,10 @@ hist(optim,nclass=100)
 moder=NULL
 for(i in 1:nsim){
   a=rbinom(n=1,1,prob=moderate)
-  pm=post_mean(priormean=0,priorsd=a*1,datamean=0.88,datase=dataSE)
+  pm=post_mean(priormean=0,priorsd=a*1,datamean=dm,datase=dataSE)
   ps=sqrt(post_var(priorsd = a*1,datase = dataSE))
   b=rnorm(1,mean=pm,sd=sqrt(ps))
- moder[i]=b
+  moder[i]=b
 }
 
 hist(moder,nclass=100)
@@ -115,7 +115,7 @@ hist(moder,nclass=100)
 skept=NULL
 for(i in 1:nsim){
   a=rbinom(n=1,1,prob=skeptical)
-  pm=post_mean(priormean=0,priorsd=a*1,datamean=0.88,datase=dataSE)
+  pm=post_mean(priormean=0,priorsd=a*1,datamean=dm,datase=dataSE)
   ps=sqrt(post_var(priorsd = a*1,datase = dataSE))
   b=rnorm(1,mean=pm,sd=sqrt(ps))
  skept[i]=b
