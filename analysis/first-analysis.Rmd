@@ -93,11 +93,11 @@ for(i in 1:nsim){
   a=rbinom(n=1,1,prob=optimistic)
   pm=post_mean(priormean=0,priorsd=a*1,datamean=dm,datase=dataSE)
   ps=sqrt(post_var(priorsd = a*1,datase = dataSE))
-  b=rnorm(1,mean=pm,sd=sqrt(ps))
+  b=rnorm(1,mean=pm,sd=ps)
  optim[i]=b
 }
 
-hist(optim,nclass=100)
+hist(optim,nclass=1000)
 
 
 moder=NULL
@@ -105,11 +105,11 @@ for(i in 1:nsim){
   a=rbinom(n=1,1,prob=moderate)
   pm=post_mean(priormean=0,priorsd=a*1,datamean=dm,datase=dataSE)
   ps=sqrt(post_var(priorsd = a*1,datase = dataSE))
-  b=rnorm(1,mean=pm,sd=sqrt(ps))
+  b=rnorm(1,mean=pm,sd=ps)
   moder[i]=b
 }
 
-hist(moder,nclass=100)
+hist(moder,nclass=1000)
 
 
 skept=NULL
@@ -117,14 +117,19 @@ for(i in 1:nsim){
   a=rbinom(n=1,1,prob=skeptical)
   pm=post_mean(priormean=0,priorsd=a*1,datamean=dm,datase=dataSE)
   ps=sqrt(post_var(priorsd = a*1,datase = dataSE))
-  b=rnorm(1,mean=pm,sd=sqrt(ps))
+  b=rnorm(1,mean=pm,sd=ps)
  skept[i]=b
 }
 
-hist(skept,nclass=100)
+hist(skept,nclass=1000)
+```
 
+To ascertain the credible intervals of each set, we simply examine the appropriate quanitles:
 
-
+```{r}
+quantile(optim,prob=c(0,0.025,0.975))
+quantile(moder,prob=c(0,0.025,0.975))
+quantile(skept,prob=c(0,0.025,0.975))
 
 
 ```{r}
