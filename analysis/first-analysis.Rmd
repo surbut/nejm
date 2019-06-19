@@ -127,9 +127,9 @@ hist(skept,nclass=1000)
 To ascertain the credible intervals of each set, we simply examine the appropriate quanitles:
 
 ```{r}
-quantile(optim,prob=c(0,0.025,0.975))
-quantile(moder,prob=c(0,0.025,0.975))
-quantile(skept,prob=c(0,0.025,0.975))
+quantile(optim,prob=c(0.025,0.5,0.975))
+quantile(moder,prob=c(0.025,0.5,0.975))
+quantile(skept,prob=c(0.025,0.5,0.975))
 
 
 ```{r}
