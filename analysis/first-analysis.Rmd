@@ -132,7 +132,10 @@ quantile(moder,prob=c(0.025,0.5,0.975))
 quantile(skept,prob=c(0.025,0.5,0.975))
 
 
-```{r}
-
 ```
+
+
+As you can see, for both the skeptical and moderate priors, the median of the distirbution is at 0, leading us to reject a substantial increase or decrease in odds in either arm of the trial.
+
+
 
