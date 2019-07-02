@@ -1,0 +1,76 @@
+---
+title: "figure"
+author: "Sarah Urbut"
+date: "2019-06-29"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Introduction
+
+
+If we model the posterior distribution of the "true" log Odds ratio $\theta$ givent the observed log OR $\hat{\theta}$, 
+
+such that 
+
+$$p(\theta) \propto 1$$ 
+
+$$p(\hat{\theta}|\theta) \sim N(\theta,\hat{se})$$
+
+$$p(\theta|\hat{\theta}) \sim N(\hat{\theta},\hat{se})$$
+
+
+
+```{r,echo=FALSE}
+
+polyCurve <- function(x, y, from, to, n = 50, miny,
+                      col = "red", border = col) {
+    drawPoly <- function(fun, from, to, n = 50, miny, col, border) {
+        Sq <- seq(from = from, to = to, length = n)
+        polygon(x = c(Sq[1], Sq, Sq[n]),
+                y = c(miny, fun(Sq), miny),
+                col = col, border = border)
+    }
+    lf <- length(from)
+    stopifnot(identical(lf, length(to)))
+    if(length(col) != lf)
+        col <- rep(col, length.out = lf)
+    if(length(border) != lf)
+        border <- rep(border, length.out = lf)
+    if(missing(miny))
+        miny <- min(y)
+    interp <- approxfun(x = x, y = y)
+    mapply(drawPoly, from = from, to = to, col = col, border = border,
+           MoreArgs = list(fun = interp, n = n, miny = miny))
+    invisible()
+}
+```
+
+```{r,echo=FALSE}
+
+th = seq(-1,1,length=500)
+
+hatlogOR=log((172/172)/(194/147))
+hatdataSE=sqrt(1/172+1/(344-172) + 1/194 + 1/(341-194))
+prior = rep(1,length(th))
+like = dnorm(hatlogOR,mean=th,sd=hatdataSE)
+post = dnorm(th,hatlogOR,hatdataSE)
+
+plot(th,post,type="l",ylab="Density",lty=2,lwd=3,xlab = expression(theta), panel.first = polyCurve(th, like, from = 0, to = 2))
+lines(th,like,lty=3,lwd=5,col="red")
+lines(th,prior,lty=2,lwd=3,col="blue")
+legend(0.4,1.5,c("Prior","Likelihood","Posterior"),lty=c(2,3,1),lwd=c(3,3,3),col=c("Blue","red","black"))
+
+
+
+
+
+
+```
+
+And we can see that the probability $\theta \leq  0$ is 0.965:
+
+```{r}
+pnorm(0,mean = hatlogOR,sd = hatdataSE)
+```
