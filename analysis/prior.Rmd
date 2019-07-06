@@ -54,17 +54,17 @@ legend(0.7,5,c("Single","Multi"),lty=c(1,1),col=c("red","blue"))
 
 The OR of dying in the single vs multivessel arm:
 
-$${\displaystyle OR={\frac {D_{S}/H_{S}}{D_{M}/H_{M}}}\,,}$$
+$${\displaystyle OR={\frac {D_{single}/H_{single}}{D_{multi}/H_{multi}}}\,,}$$
 
-Let N be the number of patients in the single vessel arm and M be the number of patients in the multivessel arm, and let x be the proportion of single vessel patients who die at 1 year and y be the proportion of patients in the multivessel arm dead after one year. Then:
+Let $N$ be the number of patients in the single vessel arm and $M$ be the number of patients in the multivessel arm, and let $x$ be the proportion of single vessel patients who die at 1 year and $y$ be the proportion of patients in the multivessel arm dead after one year. Then:
 
-$${\displaystyle OR={\frac {D_{S}/H_{S}}{D_{M}/H_{M}}}\,={\frac {nx/(n-nx)}{my/(m-my)}}\,}$$
+$${\displaystyle OR={\frac {D_{S}/H_{S}}{D_{M}/H_{M}}}\,={\frac {Nx/(N-Nx)}{My/(M-My)}}\,}$$
 
 We see that the numbers in the trial, n and m, cancel out, and we are left with: 
 
-$${\displaystyle OR={\frac {x_{S}/(1-x_{S})}{y_{m}/(1-y_{m})}}\,,}$$
+$${\displaystyle OR={\frac {x_{single}/(1-x_{single})}{y_{multi}/(1-y_{multi})}}\,,}$$
 
-where $x_{s}$ and $y_{m}$ now represent the relative proportions of death in each arm of the trial respectively, similar to the framework of the correspondence authors. We can then assemble the prior of the log OR using the simulated quantities:
+where $x_{single}$ and $y_{multi}$ now represent the relative **proportions** of death in each arm of the trial respectively, similar to the framework of the correspondence authors. We can then assemble the prior of the log OR using the simulated quantities:
 
 ```{r}
 
