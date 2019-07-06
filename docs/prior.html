@@ -432,10 +432,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsurbutnejmtreeca3c1ae4b335cf0cfd26f0f4e40f7d0218456b9dtargetblankca3c1aea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/surbut/nejm/tree/ca3c1ae4b335cf0cfd26f0f4e40f7d0218456b9d" target="_blank">ca3c1ae</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsurbutnejmtreeb15403f4625017260e8d73f510918e7153d76466targetblankb15403fa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/surbut/nejm/tree/b15403f4625017260e8d73f510918e7153d76466" target="_blank">b15403f</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomsurbutnejmtreeca3c1ae4b335cf0cfd26f0f4e40f7d0218456b9dtargetblankca3c1aea" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomsurbutnejmtreeb15403f4625017260e8d73f510918e7153d76466targetblankb15403fa" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -447,6 +447,10 @@ Ignored files:
     Ignored:    .Rhistory
     Ignored:    analysis/.DS_Store
     Ignored:    analysis/.Rhistory
+    Ignored:    analysis/figure/
+
+Unstaged changes:
+    Modified:   analysis/figure.Rmd
 
 </code></pre>
 <p>
@@ -485,6 +489,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/surbut/nejm/blob/b15403f4625017260e8d73f510918e7153d76466/analysis/prior.Rmd" target="_blank">b15403f</a>
+</td>
+<td>
+Sarah Urbut
+</td>
+<td>
+2019-07-06
+</td>
+<td>
+~/nejm/analysis/figure.Rmd
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/surbut/nejm/83eef251ed9b5f6f9c341ac9bd95f9a6934a26da/docs/prior.html" target="_blank">83eef25</a>
+</td>
+<td>
+Sarah Urbut
+</td>
+<td>
+2019-07-06
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -613,73 +651,6 @@ wflow_publish(“analysis/prior.Rmd”)
 </div>
 <p>From the paper:</p>
 <pre><code>The posterior distributions of the probability of death at 1 year associated with multivessel percutaneous coronary intervention (PCI) versus culprit-lesion-only PCI are shown and were obtained on the basis of a Bayesian beta-binomial model assuming independent, noninformative beta (0.01, 0.01) priors. Posterior 95% credible intervals for the probability of death at 1 year are 0.45 to 0.55 for culprit-lesion-only PCI and 0.52 to 0.62 for multivessel PCI.</code></pre>
-<p>First, let’s recreate their beta-binomial result for Single Vessel and Multivessle</p>
-<pre class="r"><code>p=seq(0,1,by=0.001)
-prior=dbeta(p,0.01,0.01)
-like=dbinom(x=172,size=344,prob=p)
-post=dbeta(p,0.01+172,0.01+344-172)
-
-
-
-p=seq(0,1,by=0.001)
-prior=dbeta(p,0.01,0.01)
-multilike=dbinom(x=194,size=341,prob=p)
-multipost=dbeta(p,0.01+194,0.01+341-194)
-
-
-par(mfrow=c(1,3))
-plot(p,prior,type=&quot;l&quot;,ylab=&quot;Density&quot;,lty=1,lwd=3,xlab = expression(theta),main=&quot;Prior&quot;)
-
-
-plot(p,multilike,type=&quot;l&quot;,col=&quot;blue&quot;,xlab=expression(theta),main=&quot;Likelihood&quot;)
-
-lines(p,like,col=&quot;red&quot;)
-
-legend(0.7,0.02,c(&quot;Single&quot;,&quot;Multi&quot;),lty=c(1,1),col=c(&quot;red&quot;,&quot;blue&quot;))
-
-
-plot(p,multipost,type=&quot;l&quot;,col=&quot;blue&quot;,xlab=expression(theta),main=&quot;Posterior&quot;)
-lines(p,post,type=&quot;l&quot;,col=&quot;red&quot;)
-legend(0.7,5,c(&quot;Single&quot;,&quot;Multi&quot;),lty=c(1,1),col=c(&quot;red&quot;,&quot;blue&quot;))</code></pre>
-<p><img src="figure/prior.Rmd/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-1">
-Past versions of unnamed-chunk-1-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-1-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/surbut/nejm/blob/5cad0590e2a0f40340a119cc9ba0b99190797b00/docs/figure/prior.Rmd/unnamed-chunk-1-1.png" target="_blank">5cad059</a>
-</td>
-<td>
-Sarah Urbut
-</td>
-<td>
-2019-07-06
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p>###Simulating from the prior</p>
 <p>The OR of dying (D) over living (L) in the single vs multivessel arm:</p>
 <p><span class="math display">\[{\displaystyle OR={\frac {D_{single}/L_{single}}{D_{multi}/L_{multi}}}\,,}\]</span></p>
 <p>Let <span class="math inline">\(N\)</span> be the number of patients in the single vessel arm and <span class="math inline">\(M\)</span> be the number of patients in the multivessel arm, and let <span class="math inline">\(x\)</span> be the proportion of single vessel patients who die at 1 year and <span class="math inline">\(y\)</span> be the proportion of patients in the multivessel arm dead after one year. Then:</p>
@@ -697,6 +668,12 @@ problife.multi=1-probdeath.multi
 logOR=log((probdeath.single/probdeath.multi)/(problife.single/problife.multi))</code></pre>
 <p>If we then do a histogram of the nonNA logOR2 in the range of -1,1, we can see that it is ‘approximately uniform’</p>
 <pre class="r"><code>hist(logOR[logOR!=&quot;NaN&quot;],xlim=c(-1.5,1.5),breaks = 10000)</code></pre>
+<p><img src="figure/prior.Rmd/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>We see that part of the problem lies in the fact that when <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> are simulated <span class="math inline">\(\beta(0.01,0.01)\)</span>, <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> are often <span class="math inline">\(0 or 1\)</span>,</p>
+<pre class="r"><code>p=seq(0,1,by=0.001)
+prior=dbeta(p,0.01,0.01)
+
+plot(p,prior,type=&quot;l&quot;,ylab=&quot;Density&quot;,lty=1,lwd=3,xlab = expression(theta),main=&quot;Prior Probability of Death&quot;)</code></pre>
 <p><img src="figure/prior.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-3-1">
@@ -735,6 +712,7 @@ Sarah Urbut
 </table>
 </div>
 </div>
+<p>As you can see, a preponderance of the weight for the propotion is on 0 or 1, which means that <span class="math inline">\(1-x\)</span> will also often by <span class="math inline">\(0\)</span> or <span class="math inline">\(1\)</span>, making the ratio undefined.</p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
