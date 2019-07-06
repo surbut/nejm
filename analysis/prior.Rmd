@@ -1,11 +1,14 @@
 ---
 title: "Simulating from the Prior"
 output:
+  html_document:
+    df_print: paged
+    toc: no
   html_notebook: default
   workflowr::wflow_html:
-    toc: false
     code_folding: show
-editor_options: 
+    toc: no
+editor_options:
   chunk_output_type: inline
 ---
 
@@ -17,40 +20,6 @@ From the paper:
 The posterior distributions of the probability of death at 1 year associated with multivessel percutaneous coronary intervention (PCI) versus culprit-lesion-only PCI are shown and were obtained on the basis of a Bayesian beta-binomial model assuming independent, noninformative beta (0.01, 0.01) priors. Posterior 95% credible intervals for the probability of death at 1 year are 0.45 to 0.55 for culprit-lesion-only PCI and 0.52 to 0.62 for multivessel PCI.
 ```
 
-First, let's recreate their beta-binomial result for Single Vessel and Multivessle
-
-```{r}
-p=seq(0,1,by=0.001)
-prior=dbeta(p,0.01,0.01)
-like=dbinom(x=172,size=344,prob=p)
-post=dbeta(p,0.01+172,0.01+344-172)
-
-
-
-p=seq(0,1,by=0.001)
-prior=dbeta(p,0.01,0.01)
-multilike=dbinom(x=194,size=341,prob=p)
-multipost=dbeta(p,0.01+194,0.01+341-194)
-
-
-par(mfrow=c(1,3))
-plot(p,prior,type="l",ylab="Density",lty=1,lwd=3,xlab = expression(theta),main="Prior")
-
-
-plot(p,multilike,type="l",col="blue",xlab=expression(theta),main="Likelihood")
-
-lines(p,like,col="red")
-
-legend(0.7,0.02,c("Single","Multi"),lty=c(1,1),col=c("red","blue"))
-
-
-plot(p,multipost,type="l",col="blue",xlab=expression(theta),main="Posterior")
-lines(p,post,type="l",col="red")
-legend(0.7,5,c("Single","Multi"),lty=c(1,1),col=c("red","blue"))
-
-```
-
-###Simulating from the prior
 
 The OR of dying (D) over living (L) in the single vs multivessel arm:
 
@@ -86,4 +55,15 @@ If we then do a histogram of the nonNA logOR2 in the range of -1,1, we can see t
 hist(logOR[logOR!="NaN"],xlim=c(-1.5,1.5),breaks = 10000)
 ```
 
+We see that part of the problem lies in the fact that when $x$ and $y$ are simulated $\beta(0.01,0.01)$, $x$ and $y$ are often $0 or 1$, 
+
+```{r}
+
+p=seq(0,1,by=0.001)
+prior=dbeta(p,0.01,0.01)
+
+plot(p,prior,type="l",ylab="Density",lty=1,lwd=3,xlab = expression(theta),main="Prior Probability of Death")
+```
+
+As you can see, a preponderance of the weight for the propotion is on 0 or 1, which means that $1-x$ will also often by $0$ or $1$, making the ratio undefined.
 
