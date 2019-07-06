@@ -1,0 +1,89 @@
+---
+title: "Simulating from the Prior"
+output:
+  html_notebook: default
+  workflowr::wflow_html:
+    toc: false
+    code_folding: show
+editor_options: 
+  chunk_output_type: inline
+---
+
+
+
+From the paper:
+
+```
+The posterior distributions of the probability of death at 1 year associated with multivessel percutaneous coronary intervention (PCI) versus culprit-lesion-only PCI are shown and were obtained on the basis of a Bayesian beta-binomial model assuming independent, noninformative beta (0.01, 0.01) priors. Posterior 95% credible intervals for the probability of death at 1 year are 0.45 to 0.55 for culprit-lesion-only PCI and 0.52 to 0.62 for multivessel PCI.
+```
+
+First, let's recreate their beta-binomial result for Single Vessel and Multivessle
+
+```{r}
+p=seq(0,1,by=0.001)
+prior=dbeta(p,0.01,0.01)
+like=dbinom(x=172,size=344,prob=p)
+post=dbeta(p,0.01+172,0.01+344-172)
+
+
+
+p=seq(0,1,by=0.001)
+prior=dbeta(p,0.01,0.01)
+multilike=dbinom(x=194,size=341,prob=p)
+multipost=dbeta(p,0.01+194,0.01+341-194)
+
+
+par(mfrow=c(1,3))
+plot(p,prior,type="l",ylab="Density",lty=1,lwd=3,xlab = expression(theta),main="Prior")
+
+
+plot(p,multilike,type="l",col="blue",xlab=expression(theta),main="Likelihood")
+
+lines(p,like,col="red")
+
+legend(0.7,0.02,c("Single","Multi"),lty=c(1,1),col=c("red","blue"))
+
+
+plot(p,multipost,type="l",col="blue",xlab=expression(theta),main="Posterior")
+lines(p,post,type="l",col="red")
+legend(0.7,5,c("Single","Multi"),lty=c(1,1),col=c("red","blue"))
+
+```
+
+###Simulating from the prior
+
+The OR of dying in the single vs multivessel arm:
+
+$${\displaystyle OR={\frac {D_{S}/H_{S}}{D_{M}/H_{M}}}\,,}$$
+
+Let N be the number of patients in the single vessel arm and M be the number of patients in the multivessel arm, and let x be the proportion of single vessel patients who die at 1 year and y be the proportion of patients in the multivessel arm dead after one year. Then:
+
+$${\displaystyle OR={\frac {D_{S}/H_{S}}{D_{M}/H_{M}}}\,={\frac {nx/(n-nx)}{my/(m-my)}}\,}$$
+
+We see that the numbers in the trial, n and m, cancel out, and we are left with: 
+
+$${\displaystyle OR={\frac {x_{S}/(1-x_{S})}{y_{m}/(1-y_{m})}}\,,}$$
+
+where $x_{s}$ and $y_{m}$ now represent the relative proportions of death in each arm of the trial respectively, similar to the framework of the correspondence authors. We can then assemble the prior of the log OR using the simulated quantities:
+
+```{r}
+
+probdeath.single=rbeta(100000,1,0.01,0.01)
+problife.single=1-probdeath.single
+
+probdeath.multi=rbeta(100000,1,0.01,.01)
+problife.multi=1-probdeath.multi
+
+
+logOR=log((probdeath.single/probdeath.multi)/(problife.single/problife.multi))
+
+
+
+```
+
+If we then do a histogram of the nonNA logOR2 in the range of -1,1, we can see that it is 'approximately uniform'
+```{r}
+hist(logOR[logOR!="NaN"],xlim=c(-1.5,1.5),breaks = 10000)
+```
+
+
