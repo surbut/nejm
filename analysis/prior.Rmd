@@ -52,9 +52,9 @@ legend(0.7,5,c("Single","Multi"),lty=c(1,1),col=c("red","blue"))
 
 ###Simulating from the prior
 
-The OR of dying in the single vs multivessel arm:
+The OR of dying (D) over living (L) in the single vs multivessel arm:
 
-$${\displaystyle OR={\frac {D_{single}/H_{single}}{D_{multi}/H_{multi}}}\,,}$$
+$${\displaystyle OR={\frac {D_{single}/L_{single}}{D_{multi}/L_{multi}}}\,,}$$
 
 Let $N$ be the number of patients in the single vessel arm and $M$ be the number of patients in the multivessel arm, and let $x$ be the proportion of single vessel patients who die at 1 year and $y$ be the proportion of patients in the multivessel arm dead after one year. Then:
 
