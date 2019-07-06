@@ -1,14 +1,15 @@
 ---
-title: "Simulating from the Prior"
+title: "Simulating from an improper Jeffreys Prior"
 output:
-  html_document:
-    df_print: paged
-    toc: no
   html_notebook: default
   workflowr::wflow_html:
+    toc: false
     code_folding: show
-    toc: no
+editor_options: 
+  chunk_output_type: inline
 ---
+
+
 
 ## Introduction
 
@@ -77,62 +78,4 @@ And we can see that the probability $\theta \leq  0$ is 0.965:
 ```{r}
 pnorm(0,mean = hatlogOR,sd = hatdataSE)
 ```
-
-
-From the paper:
-
-```
-The posterior distributions of the probability of death at 1 year associated with multivessel percutaneous coronary intervention (PCI) versus culprit-lesion-only PCI are shown and were obtained on the basis of a Bayesian beta-binomial model assuming independent, noninformative beta (0.01, 0.01) priors. Posterior 95% credible intervals for the probability of death at 1 year are 0.45 to 0.55 for culprit-lesion-only PCI and 0.52 to 0.62 for multivessel PCI.
-```
-
-First, let's recreate their beta-binomial result for Single Vessel and Multivessle
-
-```{r}
-p=seq(0,1,by=0.001)
-prior=dbeta(p,0.01,0.01)
-like=dbinom(x=172,size=344,prob=p)
-post=dbeta(p,0.01+172,0.01+344-172)
-
-
-
-p=seq(0,1,by=0.001)
-prior=dbeta(p,0.01,0.01)
-multilike=dbinom(x=194,size=341,prob=p)
-multipost=dbeta(p,0.01+194,0.01+341-194)
-
-
-par(mfrow=c(1,3))
-plot(p,prior,type="l",ylab="Density",lty=1,lwd=3,xlab = expression(theta),main="Prior")
-
-
-plot(p,multilike,type="l",col="blue",xlab=expression(theta),main="Likelihood")
-
-lines(p,like,col="red")
-
-legend(0.7,0.02,c("Single","Multi"),lty=c(1,1),col=c("red","blue"))
-
-
-plot(p,multipost,type="l",col="blue",xlab=expression(theta),main="Posterior")
-lines(p,post,type="l",col="red")
-legend(0.7,5,c("Single","Multi"),lty=c(1,1),col=c("red","blue"))
-````
-
-
-```{r}
-
-probdeath.single=rbeta(100000,1,0.01,.01)
-problife.single=1-probdeath.single
-
-probdeath.multi=rbeta(100000,1,0.01,.01)
-problife.multi=1-rbeta(100000,1,0.01,.01)
-
-
-logOR=log((probdeath.single/probdeath.multi)/(problife.single/problife.multi))
-```
-
-If we then do a histogram of the nonNA logOR2:
-```{r}
-hist(logOR[!is.na(logOR)],freq=FALSE)
-```
-
 
