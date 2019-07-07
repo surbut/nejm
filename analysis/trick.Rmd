@@ -1,0 +1,82 @@
+---
+title: "Beta Trick"
+output:
+  html_document:
+    df_print: paged
+    toc: no
+  html_notebook: default
+  workflowr::wflow_html:
+    code_folding: show
+    toc: no
+editor_options:
+  chunk_output_type: inline
+---
+
+
+
+From the paper:
+
+```
+The posterior distributions of the probability of death at 1 year associated with multivessel percutaneous coronary intervention (PCI) versus culprit-lesion-only PCI are shown and were obtained on the basis of a Bayesian beta-binomial model assuming independent, noninformative beta (0.01, 0.01) priors. Posterior 95% credible intervals for the probability of death at 1 year are 0.45 to 0.55 for culprit-lesion-only PCI and 0.52 to 0.62 for multivessel PCI.
+```
+
+
+The OR of dying (D) over living (L) in the single vs multivessel arm:
+
+$${\displaystyle OR={\frac {D_{single}/L_{single}}{D_{multi}/L_{multi}}}\,,}$$
+
+Let $N$ be the number of patients in the single vessel arm and $M$ be the number of patients in the multivessel arm, and let $x$ be the proportion of single vessel patients who die at 1 year and $y$ be the proportion of patients in the multivessel arm dead after one year. Then:
+
+$${\displaystyle OR={\frac {D_{S}/H_{S}}{D_{M}/H_{M}}}\,={\frac {Nx/(N-Nx)}{My/(M-My)}}\,}$$
+
+We see that the numbers in the trial, n and m, cancel out, and we are left with: 
+
+$${\displaystyle OR={\frac {x_{single}/(1-x_{single})}{y_{multi}/(1-y_{multi})}}\,,}$$
+
+where $x_{single}$ and $y_{multi}$ now represent the relative **proportions** of death in each arm of the trial respectively, similar to the framework of the correspondence authors. We can then assemble the prior of the log OR using the simulated quantities
+
+Here, we can use an analytical trick:
+
+If you generate x and y $\gamma(0.01,1)$ and set $p=x/(x+y)$ then it is the same as generating p to be $\beta$ distributed. But it is numerically more stable than using $\beta$.
+
+And if you generate x,y as above and compute $log(x)$-$log(y)$ then it is equivalent to generating p from a $\beta$ and then computing $log(p/(1-p))$. 
+
+Since
+
+$$logOR = log[(p_{single}/(1-p_{single}))/(p_{multi}/(1-p_{multi}))] $$
+
+$$log[p_{single}/(1-p_{single})]-log[p_{multi}/(1-p_{multi})]$$
+
+$$log(p_{single})-log(1-p_{single})-log(p_{multi})-log(1-p_{multi})$$
+
+$$log(x)-log(y)-log(x2)-log(y2)$$
+
+
+then we merely generate two sets of xs and ys:
+
+
+```{r}
+
+x = rgamma(10000,0.01,1)
+
+y = rgamma(10000,0.01,1)
+logoddssingle=log(x)-log(y)
+
+
+x2 = rgamma(10000,0.01,1)
+
+y2 = rgamma(10000,0.01,1)
+
+logoddsmulti=log(x2)-log(y2)
+
+logOR=logoddssingle-logoddsmulti
+
+hist(logOR,xlim=c(-3,3),nclass=1000,freq=FALSE)
+
+```
+
+If we then do a histogram of the nonNA logOR2 in the range of -1,1, we can see that it is 'approximately uniform'
+```{r}
+hist(logOR[logOR!="NaN"],xlim=c(-1.5,1.5),breaks = 10000)
+```
+
