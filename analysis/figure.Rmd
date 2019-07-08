@@ -1,11 +1,14 @@
 ---
 title: "Simulating from an improper Jeffreys Prior"
 output:
+  html_document:
+    df_print: paged
+    toc: no
   html_notebook: default
   workflowr::wflow_html:
-    toc: false
     code_folding: show
-editor_options: 
+    toc: no
+editor_options:
   chunk_output_type: inline
 ---
 
@@ -57,7 +60,7 @@ th = seq(-1,1,length=500)
 
 hatlogOR=log((172/172)/(194/147))
 hatdataSE=sqrt(1/172+1/(344-172) + 1/194 + 1/(341-194))
-prior = rep(1,length(th))
+prior = rep(0.0025,length(th))
 like = dnorm(hatlogOR,mean=th,sd=hatdataSE)
 post = dnorm(th,hatlogOR,hatdataSE)
 
