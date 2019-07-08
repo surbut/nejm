@@ -57,26 +57,24 @@ then we merely generate two sets of xs and ys:
 
 ```{r}
 
-x = rgamma(10000,0.01,1)
+x = rgamma(1000000,0.01,1)
 
-y = rgamma(10000,0.01,1)
+y = rgamma(1000000,0.01,1)
 logoddssingle=log(x)-log(y)
 
 
-x2 = rgamma(10000,0.01,1)
+x2 = rgamma(1000000,0.01,1)
 
-y2 = rgamma(10000,0.01,1)
+y2 = rgamma(1000000,0.01,1)
 
 logoddsmulti=log(x2)-log(y2)
 
 logOR=logoddssingle-logoddsmulti
 
-hist(logOR,xlim=c(-3,3),nclass=1000,freq=FALSE)
+hist(logOR,xlim=c(-1.5,1.5),breaks = 10000,freq=FALSE,ylim=c(0,0.004))
 
 ```
 
 If we then do a histogram of the nonNA logOR2 in the range of -1,1, we can see that it is 'approximately uniform'
-```{r}
-hist(logOR[logOR!="NaN"],xlim=c(-1.5,1.5),breaks = 10000)
-```
+
 
