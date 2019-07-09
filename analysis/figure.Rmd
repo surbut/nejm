@@ -68,6 +68,10 @@ plot(th,post,type="l",ylab="Density",lty=2,lwd=3,xlab = expression(theta), panel
 lines(th,like,lty=3,lwd=5,col="red")
 lines(th,prior,lty=2,lwd=3,col="blue")
 legend(0.4,1.5,c("Prior","Likelihood","Posterior"),lty=c(2,3,1),lwd=c(3,3,3),col=c("Blue","red","black"))
+abline(v=hatlogOR,lwd=3)
+abline(v=hatlogOR+1.96*hatdataSE,lty=2)
+abline(v=hatlogOR-1.96*hatdataSE,lty=2)
+
 ```
 
 
