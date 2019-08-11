@@ -1,0 +1,167 @@
+---
+title: "stopdapt"
+output:
+  html_document:
+    df_print: paged
+    toc: no
+  html_notebook: default
+  workflowr::wflow_html:
+    code_folding: show
+    toc: no
+editor_options:
+  chunk_output_type: inline
+---
+
+## Introduction
+
+
+In this document, we aim to run a post-hoc Bayesian analysis of the results in the paper "Effect of 1-Month Dual Antiplatelet Therapy Followed by Clopidogrel vs 12-Month Dual Antiplatelet Therapy on Cardiovascular and Bleeding Events in Patients Receiving PCI" by [Watanabe et al.](https://jamanetwork.com/journals/jama/fullarticle/2736563).
+
+We know that the log of the Hazard ratio is normally distributed. 
+
+Log HR = -0.44 (-0.87,-0.02)
+
+which means that the standard error of the log HR is 0.21. 
+
+$$se(logHR)=\frac{ln(UR)-ln(LR)}{2 \times 1.96}$$
+
+
+
+If we assume a generous, perhaps 'ridiculous' prior on $\theta=OR$ of $\theta \sim N(0,1)$, then we would arrive a posterior estimate of $$\theta|\hat{\theta},\hat{s^{2}},\sigma^2$$ using simple conjugate normal with $\theta \sim N(0,1)$ and data $\hat{\theta}$=-0.44, $\hat{s}$=0.21.
+
+$$\tilde{\theta}\sim{\frac {\sigma _{0}^{2}}{ \sigma ^{2}+\sigma _{0}^{2}} \hat {\theta} +  {\frac {\sigma _{0}^{2}}{ \sigma ^{2}+\sigma _{0}^{2}} \theta_{0}}}$$
+
+$$\tilde{\sigma^2}\sim ( \frac {1}{ \sigma ^{2}} + \frac{1}{\sigma _{0}^{2}})^{-1}$$
+
+
+
+
+
+```{r computepost}
+##SE log OR
+
+dataSE=0.21
+post_mean=function(priormean,priorsd,datamean,datase){
+  priorsd^2/(datase^2+priorsd^2)*datamean+datase^2/(datase^2+priorsd^2)*priormean}
+
+post_var=function(priorsd,datase){
+  1/(1/datase^2+1/priorsd^2)}
+
+pm=post_mean(priormean = 0,priorsd = 1,datamean = -0.44,datase = dataSE)
+pv=post_var(priorsd = 1,datase = dataSE)
+
+```
+
+We can sample from this distribution and plot the 95% Credible intervals:
+
+```{r sampleplot}
+
+rsamp=rnorm(100000,mean=pm,sd=sqrt(pv))
+
+hist(rsamp,freq=F,nclass = 100)
+
+a=qnorm(p =0.025,mean = pm,sd=sqrt(pv))
+b=qnorm(p =0.975,mean = pm,sd=sqrt(pv))
+abline(v=a)
+abline(v=b)
+
+```
+
+Now, let's try various levels of confidence such that $\theta$ is simulated as a mixture of distirbutions with point mass on 0.
+
+$$\theta \sim \pi_{0} \delta_{0} + \pi_{1} N (0,\sigma^2)$$ where $\sigma^2 =1$
+
+We can try varying levels of skepticisim, with $\pi_{0}$ = 0.10,0.50, and 0.90 for confident, moderate, and skeptical accordingly.
+
+$\pi=p(z=k)$ is the prior probability of a data point arising from a particular component, while the posterior weight or `responsibility' represents the probability of the data arising from a particualr component given the data observed. Here, each component corresponds to one of the two available densities.
+
+$$\tilde \pi = p(z=k|data) = \frac{p(data|z=k)\pi_{1}}{\sum_k{p(data|z=k)}}=\frac{p(data|z=k)}{\pi_{0} p(data|N(0,\hat{se}^{2}+\sigma^{2}_{0\delta_{0}})+\pi_{1} p(data|N(0,\hat{se}^2+\sigma^{2}_{0k}))}$$
+
+where $\pi_{1}$ is the prior probability that the data arose from a population with a log-hazard ratio that had a distribution centered on (but not equivalent to!!) 0 (i.e., N(0,1) in our context.
+
+The marginal $p(data|N(0,\hat{se}^2+\sigma^{2}_{0k})$ is akin to evaluating the normal density $N(0,\hat{se}^2+\sigma^{2}_{0k})$ at $\hat{\theta}$.
+
+```{r}
+
+###the marginal likelihood is N(0,\sigma_[0] + \sigma^2)
+
+sdlik=sqrt(1+dataSE^2)
+
+optimistic=0.90*dnorm(-0.28,mean = 0,sd=sdlik)/(0.90*dnorm(-0.44,mean = 0,sd=sdlik)+0.10*dnorm(-0.44,mean = 0,sd=dataSE))
+
+moderate=0.50*dnorm(-0.28,mean = 0,sd=sdlik)/(0.50*dnorm(-0.44,mean = 0,sd=sdlik)+0.50*dnorm(-0.44,mean = 0,sd=dataSE))
+
+skeptical=0.10*dnorm(-0.28,mean = 0,sd=sdlik)/sum(0.10*dnorm(-0.44,mean = 0,sd=sdlik)+0.90*dnorm(-0.44,mean = 0,sd=dataSE))
+```
+
+Then, we can run simulations according to these componenets to determine the density
+
+FOr the optimistic simulation:
+
+
+```{r}
+dm=-0.44
+nsim=100000
+sims=rbinom(n=nsim,1,prob=0.5)
+optim=NULL
+for(i in 1:nsim){
+  a=rbinom(n=1,1,prob=optimistic)
+  pm=post_mean(priormean=0,priorsd=a*1,datamean=dm,datase=dataSE)
+  ps=sqrt(post_var(priorsd = a*1,datase = dataSE))
+  b=rnorm(1,mean=pm,sd=ps)
+ optim[i]=b
+}
+
+hist(optim,nclass=1000)
+
+
+moder=NULL
+for(i in 1:nsim){
+  a=rbinom(n=1,1,prob=moderate)
+  pm=post_mean(priormean=0,priorsd=a*1,datamean=dm,datase=dataSE)
+  ps=sqrt(post_var(priorsd = a*1,datase = dataSE))
+  b=rnorm(1,mean=pm,sd=ps)
+  moder[i]=b
+}
+
+hist(moder,nclass=1000)
+
+
+skept=NULL
+for(i in 1:nsim){
+  a=rbinom(n=1,1,prob=skeptical)
+  pm=post_mean(priormean=0,priorsd=a*1,datamean=dm,datase=dataSE)
+  ps=sqrt(post_var(priorsd = a*1,datase = dataSE))
+  b=rnorm(1,mean=pm,sd=ps)
+ skept[i]=b
+}
+
+hist(skept,nclass=1000)
+```
+
+To ascertain the credible intervals of each set, we simply examine the appropriate quanitles:
+
+```{r}
+exp(quantile(optim,prob=c(0.05,0.5,0.95)))
+exp(quantile(moder,prob=c(0.05,0.5,0.95)))
+exp(quantile(skept,prob=c(0.05,0.5,0.95)))
+
+
+
+```
+
+
+As you can see, for both the moderate and skeptical clinician, the confidence interval overlaps 0, leading him to fail to accept the null hypotehsis or conclude superiority of the new therapy.
+
+
+```{r}
+exp(quantile(optim,prob=c(0.05,0.5,0.95)))
+exp(quantile(moder,prob=c(0.05,0.5,0.95)))
+exp(quantile(skept,prob=c(0.05,0.5,0.95)))
+
+
+
+```
+
+
+
