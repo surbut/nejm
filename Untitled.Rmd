@@ -1,18 +1,3 @@
----
-title: "stopdapt"
-output:
-  word_document:
-    toc: no
-  html_notebook: default
-  html_document:
-    df_print: paged
-    toc: no
-  workflowr::wflow_html:
-    code_folding: show
-    toc: no
-editor_options:
-  chunk_output_type: inline
----
 
 ## Introduction
 
@@ -138,7 +123,7 @@ for(i in 1:nsim){
  skept[i]=b
 }
 
-hist(skept,nclass=1000,freq=FALSE)
+hist(skept,nclass=1000)
 ```
 
 To ascertain the credible intervals of each set, we simply examine the appropriate quanitles:
@@ -197,8 +182,8 @@ polyCurve <- function(x, y, from, to, n = 50, miny,
 ```{r,echo=T}
 
 op <- par(mfrow = c(2,2),
-          oma = c(5,4,0,0) + 0.1,
-          mar = c(0,0,1,1) + 0.1)
+          oma = c(5,4,1,1) + 0.1,
+          mar = c(1,1,1,1) + 0.1)
 
 th = seq(-1,1,length=500)
 
@@ -213,10 +198,11 @@ ps=sqrt(post_var(priorsd = 1,datase = hatdataSE))
 post = dnorm(th,mean = pm,sd=ps)
 CI_low=pm-1.96*ps
 CI_up=pm+1.96*ps
-plot(th,post,type="l",ylab="Density",lty=2,lwd=3,xlim=c(-1,1),xlab = expression(theta), panel.first = polyCurve(th, post, from = CI_low, to = CI_up),main="Frequentist")
+plot(th,post,type="l",ylab="Density",lty=2,lwd=3,xlim=c(-1,1),xlab = expression(theta), panel.first = polyCurve(th, post, from = CI_low, to = CI_up),main="Frequentist",xaxt='n')
+#,col.axis = "white")
 lines(th,like,lty=3,lwd=5,col="red")
 lines(th,prior,lty=2,lwd=3,col="blue")
-legend(0.4,1.5,c("Prior","Likelihood","Posterior"),lty=c(2,3,1),lwd=c(3,3,3),col=c("Blue","red","black"))
+legend(0.2,1.5,c("Prior","Likelihood","Posterior"),lty=c(2,3,1),lwd=c(3,3,3),col=c("Blue","red","black"))
 
 
 ##generous
@@ -227,10 +213,10 @@ ps=sqrt(post_var(priorsd = 1,datase = hatdataSE))
 post = dnorm(th,mean = pm,sd=ps)
 CI_low=pm-1.96*ps
 CI_up=pm+1.96*ps
-plot(th,post,type="l",ylab="Density",lty=2,lwd=3,xlab = expression(theta), panel.first = polyCurve(th, post, from = CI_low, to = CI_up),main="Optimist")
+plot(th,post,type="l",ylab="Density",lty=2,lwd=3,xlab = expression(theta), panel.first = polyCurve(th, post, from = CI_low, to = CI_up),main="Optimist",yaxt='n',xaxt='n')
 lines(th,like,lty=3,lwd=5,col="red")
 lines(th,prior,lty=2,lwd=3,col="blue")
-legend(0.4,1.5,c("Prior","Likelihood","Posterior"),lty=c(2,3,1),lwd=c(3,3,3),col=c("Blue","red","black"))
+legend(0.2,1.5,c("Prior","Likelihood","Posterior"),lty=c(2,3,1),lwd=c(3,3,3),col=c("Blue","red","black"))
 
 
 
@@ -241,10 +227,11 @@ ps=sqrt(post_var(priorsd = 0.1,datase = hatdataSE))
 post = dnorm(th,mean = pm,sd=ps)
 CI_low=pm-1.96*ps
 CI_up=pm+1.96*ps
-plot(th,post,type="l",ylab="Density",lty=2,lwd=3,xlab = expression(theta), panel.first = polyCurve(th, post, from = CI_low, to = CI_up),main="Moderate")
+plot(th,post,type="l",ylab="Density",lty=2,lwd=3,xlab = expression(theta), panel.first = polyCurve(th, post, from = CI_low, to = CI_up),main="Moderate") 
+#,col.axis = "white")
 lines(th,like,lty=3,lwd=5,col="red")
 lines(th,prior,lty=2,lwd=3,col="blue")
-legend(0.4,4,c("Prior","Likelihood","Posterior"),lty=c(2,3,1),lwd=c(3,3,3),col=c("Blue","red","black"))
+legend(0.2,4,c("Prior","Likelihood","Posterior"),lty=c(2,3,1),lwd=c(3,3,3),col=c("Blue","red","black"))
 
 
 
@@ -255,13 +242,9 @@ ps=sqrt(post_var(priorsd = 0.01,datase = hatdataSE))
 post = dnorm(th,mean = pm,sd=ps)
 CI_low=pm-1.96*ps
 CI_up=pm+1.96*ps
-plot(th,post,type="l",ylab="Density",lty=2,lwd=3,xlab = expression(theta), panel.first = polyCurve(th, post, from = CI_low, to = CI_up),main="Skeptic")
+plot(th,post,type="l",ylab="Density",lty=2,lwd=3,xlab = expression(theta), panel.first = polyCurve(th, post, from = CI_low, to = CI_up),main="Skeptic",yaxt='n')
 lines(th,like,lty=3,lwd=5,col="red")
 lines(th,prior,lty=2,lwd=3,col="blue")
-legend(0.4,15,c("Prior","Likelihood","Posterior"),lty=c(2,3,1),lwd=c(3,3,3),col=c("Blue","red","black"))
+legend(0.2,15,c("Prior","Likelihood","Posterior"),lty=c(2,3,1),lwd=c(3,3,3),col=c("Blue","red","black"))
 
 ```
-
-
-
-
