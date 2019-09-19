@@ -1,17 +1,10 @@
 ---
 title: "stopdapt"
-output:
-  word_document:
-    toc: no
-  html_notebook: default
-  html_document:
-    df_print: paged
-    toc: no
-  workflowr::wflow_html:
-    code_folding: show
-    toc: no
+author: "Sarah Urbut"
+date: '2019-07-20'
+output: word_document
 editor_options:
-  chunk_output_type: inline
+  chunk_output_type: console
 ---
 
 ## Introduction
@@ -195,73 +188,100 @@ polyCurve <- function(x, y, from, to, n = 50, miny,
 ```
 
 ```{r,echo=T}
+post_mean=function(priormean,priorsd,datamean,datase){
+      priorsd^2/(datase^2+priorsd^2)*datamean+datase^2/(datase^2+priorsd^2)*priormean}
+    
+    post_var=function(priorsd,datase){
+      1/(1/datase^2+1/priorsd^2)}
+    
+    ###Here, we create a funbciton for the posterior weights as p(K|D)=p(D|K)*p(K)/sum_k[p(D|K)*p(K)] where p(K)= 1-pi0 for chosen level of skepticism
+    pipost=function(pi1,dataSE,datamean,priorsd){
+      sdlik=sqrt(priorsd^2+dataSE^2)
+      pi0=1-pi1
+      joint=pi1*dnorm(datamean,mean = 0,sd=sdlik)
+      marginal=pi1*dnorm(datamean,mean = 0,sd=sdlik)+pi0*dnorm(datamean,mean = 0,sd=dataSE)
+      pip=joint/marginal
+      return(pip)}
+    
+    
+   
+    dse=0.22
+    dm=-0.44
+    psd=1
+    sim=1000
+    
 
-op <- par(mfrow = c(2,2),
-          oma = c(5,4,0,0) + 0.1,
-          mar = c(0,0,1,1) + 0.1)
+    
+       ##moderate
+  hatlogHR=-0.44
+hatdataSE=0.21
+
+  p1=1
+   psd=10
+   
+    plot_prior=function(p1,hatlogOR,hatdataSE,psd,title){
+      
+  priorid=rbinom(sim,prob=p1,size=1)
+    priov=sapply(priorid,function(x){x*rnorm(1,0,psd)})
+
+   
+  
+    p=pipost(p1,dataSE=dse,datamean=dm,priorsd=psd)###computer posterior weight on nonzero component using chosen prior weight
+    s=rbinom(n = sim,size=1,prob=p)##create a vector indexing whether comes from null or real depending on posterior weight, where for each simulation, an RV (0,1) is simulated from Binomial(n=1,size=1) according to posterio weight
+    pm=sapply(s,function(s){post_mean(priormean=0,priorsd=s*psd,datamean=dm,datase=dse)})##depending on whether null or alternative chosen, simulate posterior mean of distribution
+    ps=sqrt(sapply(s,function(s){post_var(priorsd=s*psd,datase=dse)}))#
+    bmod=sapply(seq(1:length(pm)),function(x){rnorm(1,mean = pm[x],sd=ps[x])})###for ever simulated mean, choose a 
+    
+ 
+
+
+# 
+# 
+
 
 th = seq(-1,1,length=500)
 
-hatlogHR=-0.44
-hatdataSE=0.21
+
+
 
 ##frequentist
-prior = rep(1,length(th))
+
+ 
+  priorid=rbinom(sim,prob=p1,size=1)
+    priov=sapply(priorid,function(x){x*rnorm(1,0,psd)})
+
+
+  
+    p=pipost(p1,dataSE=dse,datamean=dm,priorsd=psd)###computer posterior weight on nonzero component using chosen prior weight
+    s=rbinom(n = sim,size=1,prob=p)##create a vector indexing whether comes from null or real depending on posterior weight, where for each simulation, an RV (0,1) is simulated from Binomial(n=1,size=1) according to posterio weight
+    pm=sapply(s,function(s){post_mean(priormean=0,priorsd=s*psd,datamean=dm,datase=dse)})##depending on whether null or alternative chosen, simulate posterior mean of distribution
+    ps=sqrt(sapply(s,function(s){post_var(priorsd=s*psd,datase=dse)}))#
+    bskept=sapply(seq(1:length(pm)),function(x){rnorm(1,mean = pm[x],sd=ps[x])})###for ever simulated mean, choose a 
+
+
+
 like = dnorm(hatlogHR,mean=th,sd=hatdataSE)
-pm=post_mean(priormean = 0,priorsd = 1,datamean = hatlogHR,datase = hatdataSE)
-ps=sqrt(post_var(priorsd = 1,datase = hatdataSE))
-post = dnorm(th,mean = pm,sd=ps)
-CI_low=pm-1.96*ps
-CI_up=pm+1.96*ps
-plot(th,post,type="l",ylab="Density",lty=2,lwd=3,xlim=c(-1,1),xlab = expression(theta), panel.first = polyCurve(th, post, from = CI_low, to = CI_up),main="Frequentist")
+
+CI_low=quantile(bskept,0.025)
+CI_up=quantile(bskept,0.975)
+
+plot(density(bskept),type="l",ylab="",lty=1,lwd=3,xlim=c(-1,1),yaxt='n',xaxt='n',xlab = expression(theta),main=title) #panel.first = polyCurve(density(bskept)$x,density(bskept)$y, from = CI_low, to = CI_up),
+       
 lines(th,like,lty=3,lwd=5,col="red")
-lines(th,prior,lty=2,lwd=3,col="blue")
-legend(0.4,1.5,c("Prior","Likelihood","Posterior"),lty=c(2,3,1),lwd=c(3,3,3),col=c("Blue","red","black"))
+lines(density(priov),lty=2,lwd=3,col="blue")
+legend(0.2,1.5,c("Prior","Likelihood","Posterior"),lty=c(2,3,1),lwd=c(3,3,3),col=c("Blue","red","black"))}
 
-
-##generous
-prior = dnorm(th,0,1)
-like = dnorm(hatlogHR,mean=th,sd=hatdataSE)
-pm=post_mean(priormean = 0,priorsd = 1,datamean = hatlogHR,datase = hatdataSE)
-ps=sqrt(post_var(priorsd = 1,datase = hatdataSE))
-post = dnorm(th,mean = pm,sd=ps)
-CI_low=pm-1.96*ps
-CI_up=pm+1.96*ps
-plot(th,post,type="l",ylab="Density",lty=2,lwd=3,xlab = expression(theta), panel.first = polyCurve(th, post, from = CI_low, to = CI_up),main="Optimist")
-lines(th,like,lty=3,lwd=5,col="red")
-lines(th,prior,lty=2,lwd=3,col="blue")
-legend(0.4,1.5,c("Prior","Likelihood","Posterior"),lty=c(2,3,1),lwd=c(3,3,3),col=c("Blue","red","black"))
-
-
-
-##moderate prior
-prior = dnorm(th,0,0.1)
-pm=post_mean(priormean = 0,priorsd = 0.1,datamean = hatlogHR,datase = hatdataSE)
-ps=sqrt(post_var(priorsd = 0.1,datase = hatdataSE))
-post = dnorm(th,mean = pm,sd=ps)
-CI_low=pm-1.96*ps
-CI_up=pm+1.96*ps
-plot(th,post,type="l",ylab="Density",lty=2,lwd=3,xlab = expression(theta), panel.first = polyCurve(th, post, from = CI_low, to = CI_up),main="Moderate")
-lines(th,like,lty=3,lwd=5,col="red")
-lines(th,prior,lty=2,lwd=3,col="blue")
-legend(0.4,4,c("Prior","Likelihood","Posterior"),lty=c(2,3,1),lwd=c(3,3,3),col=c("Blue","red","black"))
-
-
-
-##more skeptical prior
-prior = dnorm(th,0,0.01)
-pm=post_mean(priormean = 0,priorsd = 0.01,datamean = hatlogHR,datase = hatdataSE)
-ps=sqrt(post_var(priorsd = 0.01,datase = hatdataSE))
-post = dnorm(th,mean = pm,sd=ps)
-CI_low=pm-1.96*ps
-CI_up=pm+1.96*ps
-plot(th,post,type="l",ylab="Density",lty=2,lwd=3,xlab = expression(theta), panel.first = polyCurve(th, post, from = CI_low, to = CI_up),main="Skeptic")
-lines(th,like,lty=3,lwd=5,col="red")
-lines(th,prior,lty=2,lwd=3,col="blue")
-legend(0.4,15,c("Prior","Likelihood","Posterior"),lty=c(2,3,1),lwd=c(3,3,3),col=c("Blue","red","black"))
 
 ```
 
+Plot
 
+```{r}
+op <- par(mfrow = c(2,2),
+           oma = c(5,4,0,0) + 0.1,
+           mar = c(0,0,1,1) + 0.1)
 
-
+plot_prior(p1=1,hatlogOR = hatlogOR,psd = 10,hatdataSE = 0.22,title="Frequentist")
+plot_prior(p1=0.90,hatlogOR = hatlogOR,psd = 1,hatdataSE = 0.22,title="Generous")
+plot_prior(p1=0.50,hatlogOR = hatlogOR,psd = 1,hatdataSE = 0.22,title="Moderate")
+plot_prior(p1=0.10,hatlogOR = hatlogOR,psd = 1,hatdataSE = 0.22,title="Skeptic")

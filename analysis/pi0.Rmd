@@ -33,7 +33,8 @@ pipost=function(pi1,dataSE,datamean,priorsd){
   return(pip)}
 
 
-pis=seq(0,1,by=0.01)##proportional weight on slab (non0 component)
+pis=rev(seq(0,1,by=0.01))##proportional weight on slab (non0 component)
+pis=seq(0,1,by=0.01)
 dse=0.21
 dm=-0.44
 priorsd=1
@@ -56,7 +57,7 @@ CIS=apply(simmat,2,function(x){quantile(x,probs = c(0.025,0.975))})
 require(plotrix)
 medians=apply(simmat,2,median)
 
-plotCI(pis, y = colMeans(simmat), ui=CIS[2,], li = CIS[1,],ylim=c(-1.1,0.2),cex=0.5,xlab=expression(paste("Optimism:",pi[alt])),ylab="PosteriorMedian[CI]",main=expression(paste("Posterior CI vs Optimism",pi[alt])))
+plotCI(1-pis, y = colMeans(simmat), ui=CIS[2,], li = CIS[1,],ylim=c(-1.1,0.2),cex=0.5,xlab=expression(paste(pi[0])),ylab="PosteriorMedian[CI]",main=expression(paste("Posterior CI vs ",pi[0])))
 abline(h=0,col="red",lwd=2,lty=2)
 
 # polygon(c(rev(pis), pis), c(rev(CIS[1,]), CIS[2,]), col = 'grey80', border = NA)

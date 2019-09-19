@@ -10,7 +10,9 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="Sarah Urbut" />
 
+<meta name="date" content="2019-07-20" />
 
 <title>stopdapt</title>
 
@@ -20,8 +22,10 @@
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 
@@ -247,10 +251,64 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
-<style type="text/css">
-.code-folding-btn { margin-bottom: 4px; }
-</style>
 
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
 
 
 
@@ -260,6 +318,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -302,17 +370,11 @@ div.section {
 
 <div class="fluid-row" id="header">
 
-<div class="btn-group pull-right">
-<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
-<ul class="dropdown-menu" style="min-width: 50px;">
-<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
-<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
-</ul>
-</div>
-
 
 
 <h1 class="title toc-ignore">stopdapt</h1>
+<h4 class="author">Sarah Urbut</h4>
+<h4 class="date">2019-07-20</h4>
 
 </div>
 
@@ -337,7 +399,7 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2019-08-11
+<strong>Last updated:</strong> 2019-09-16
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
@@ -428,10 +490,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsurbutnejmtreeacd681ec98b399834798950ee36b1b2cef9d11bbtargetblankacd681ea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/surbut/nejm/tree/acd681ec98b399834798950ee36b1b2cef9d11bb" target="_blank">acd681e</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsurbutnejmtree2e9c065821901fb4ed13c651902b5c9e13e49fc7targetblank2e9c065a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/surbut/nejm/tree/2e9c065821901fb4ed13c651902b5c9e13e49fc7" target="_blank">2e9c065</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomsurbutnejmtreeacd681ec98b399834798950ee36b1b2cef9d11bbtargetblankacd681ea" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomsurbutnejmtree2e9c065821901fb4ed13c651902b5c9e13e49fc7targetblank2e9c065a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -443,10 +505,12 @@ Ignored files:
     Ignored:    .Rhistory
     Ignored:    analysis/.DS_Store
     Ignored:    analysis/.Rhistory
+    Ignored:    analysis/figure/
+    Ignored:    docs/.DS_Store
+    Ignored:    docs/figure/.DS_Store
 
 Untracked files:
-    Untracked:  analysis/stopdapt.knit.md
-    Untracked:  analysis/stopdapt.utf8.md
+    Untracked:  analysis/flash10.rds
 
 Unstaged changes:
     Modified:   analysis/stopdapt.Rmd
@@ -488,6 +552,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/surbut/nejm/blob/2e9c065821901fb4ed13c651902b5c9e13e49fc7/analysis/stopdapt.Rmd" target="_blank">2e9c065</a>
+</td>
+<td>
+Sarah Urbut
+</td>
+<td>
+2019-09-13
+</td>
+<td>
+Update
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/surbut/nejm/2e9c065821901fb4ed13c651902b5c9e13e49fc7/docs/stopdapt.html" target="_blank">2e9c065</a>
+</td>
+<td>
+Sarah Urbut
+</td>
+<td>
+2019-09-13
+</td>
+<td>
+Update
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -723,7 +821,7 @@ for(i in 1:nsim){
  skept[i]=b
 }
 
-hist(skept,nclass=1000)</code></pre>
+hist(skept,nclass=1000,freq=FALSE)</code></pre>
 <p><img src="figure/stopdapt.Rmd/unnamed-chunk-2-3.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-2-3">
@@ -803,7 +901,49 @@ Sarah Urbut
            MoreArgs = list(fun = interp, n = n, miny = miny))
     invisible()
 }</code></pre>
-<pre class="r"><code>op &lt;- par(mfrow = c(2,2),
+<pre class="r"><code>post_mean=function(priormean,priorsd,datamean,datase){
+      priorsd^2/(datase^2+priorsd^2)*datamean+datase^2/(datase^2+priorsd^2)*priormean}
+    
+    post_var=function(priorsd,datase){
+      1/(1/datase^2+1/priorsd^2)}
+    
+    ###Here, we create a funbciton for the posterior weights as p(K|D)=p(D|K)*p(K)/sum_k[p(D|K)*p(K)] where p(K)= 1-pi0 for chosen level of skepticism
+    pipost=function(pi1,dataSE,datamean,priorsd){
+      sdlik=sqrt(priorsd^2+dataSE^2)
+      pi0=1-pi1
+      joint=pi1*dnorm(datamean,mean = 0,sd=sdlik)
+      marginal=pi1*dnorm(datamean,mean = 0,sd=sdlik)+pi0*dnorm(datamean,mean = 0,sd=dataSE)
+      pip=joint/marginal
+      return(pip)}
+    
+    
+   
+    dse=0.22
+    dm=-0.44
+    psd=1
+    sim=1000
+    
+
+    
+       ##moderate
+   p1=0.50
+  priorid=rbinom(sim,prob=p1,size=1)
+    priov=sapply(priorid,function(x){x*rnorm(1,0,psd)})
+
+   
+  
+    p=pipost(p1,dataSE=dse,datamean=dm,priorsd=psd)###computer posterior weight on nonzero component using chosen prior weight
+    s=rbinom(n = sim,size=1,prob=p)##create a vector indexing whether comes from null or real depending on posterior weight, where for each simulation, an RV (0,1) is simulated from Binomial(n=1,size=1) according to posterio weight
+    pm=sapply(s,function(s){post_mean(priormean=0,priorsd=s*psd,datamean=dm,datase=dse)})##depending on whether null or alternative chosen, simulate posterior mean of distribution
+    ps=sqrt(sapply(s,function(s){post_var(priorsd=s*psd,datase=dse)}))#
+    bmod=sapply(seq(1:length(pm)),function(x){rnorm(1,mean = pm[x],sd=ps[x])})###for ever simulated mean, choose a 
+    
+ 
+
+
+
+
+op &lt;- par(mfrow = c(2,2),
           oma = c(5,4,0,0) + 0.1,
           mar = c(0,0,1,1) + 0.1)
 
@@ -812,61 +952,144 @@ th = seq(-1,1,length=500)
 hatlogHR=-0.44
 hatdataSE=0.21
 
+
+
 ##frequentist
-prior = rep(1,length(th))
+
+   p1=1
+   psd=10
+  priorid=rbinom(sim,prob=p1,size=1)
+    priov=sapply(priorid,function(x){x*rnorm(1,0,psd)})
+
+
+  
+    p=pipost(p1,dataSE=dse,datamean=dm,priorsd=psd)###computer posterior weight on nonzero component using chosen prior weight
+    s=rbinom(n = sim,size=1,prob=p)##create a vector indexing whether comes from null or real depending on posterior weight, where for each simulation, an RV (0,1) is simulated from Binomial(n=1,size=1) according to posterio weight
+    pm=sapply(s,function(s){post_mean(priormean=0,priorsd=s*psd,datamean=dm,datase=dse)})##depending on whether null or alternative chosen, simulate posterior mean of distribution
+    ps=sqrt(sapply(s,function(s){post_var(priorsd=s*psd,datase=dse)}))#
+    bskept=sapply(seq(1:length(pm)),function(x){rnorm(1,mean = pm[x],sd=ps[x])})###for ever simulated mean, choose a 
+
+
+
 like = dnorm(hatlogHR,mean=th,sd=hatdataSE)
-pm=post_mean(priormean = 0,priorsd = 1,datamean = hatlogHR,datase = hatdataSE)
-ps=sqrt(post_var(priorsd = 1,datase = hatdataSE))
-post = dnorm(th,mean = pm,sd=ps)
-CI_low=pm-1.96*ps
-CI_up=pm+1.96*ps
-plot(th,post,type=&quot;l&quot;,ylab=&quot;Density&quot;,lty=2,lwd=3,xlim=c(-1,1),xlab = expression(theta), panel.first = polyCurve(th, post, from = CI_low, to = CI_up),main=&quot;Frequentist&quot;)
+
+CI_low=quantile(bskept,0.025)
+CI_up=quantile(bskept,0.975)
+plot(density(bskept),type=&quot;l&quot;,ylab=&quot;Density&quot;,lty=2,lwd=3,xlim=c(-1,1),xlab = expression(theta), panel.first = polyCurve(density(bskept)$x,density(bskept)$y, from = CI_low, to = CI_up),main=&quot;Frequentist&quot;)
 lines(th,like,lty=3,lwd=5,col=&quot;red&quot;)
-lines(th,prior,lty=2,lwd=3,col=&quot;blue&quot;)
-legend(0.4,1.5,c(&quot;Prior&quot;,&quot;Likelihood&quot;,&quot;Posterior&quot;),lty=c(2,3,1),lwd=c(3,3,3),col=c(&quot;Blue&quot;,&quot;red&quot;,&quot;black&quot;))
+lines(density(priov),lty=2,lwd=3,col=&quot;blue&quot;)
+legend(0.2,1.5,c(&quot;Prior&quot;,&quot;Likelihood&quot;,&quot;Posterior&quot;),lty=c(2,3,1),lwd=c(3,3,3),col=c(&quot;Blue&quot;,&quot;red&quot;,&quot;black&quot;))
+
+    ##more generous prior
+   p1=0.90
+  priorid=rbinom(sim,prob=p1,size=1)
+    priov=sapply(priorid,function(x){x*rnorm(1,0,psd)})
 
 
-##generous
-prior = dnorm(th,0,1)
+  
+    p=pipost(p1,dataSE=dse,datamean=dm,priorsd=psd)###computer posterior weight on nonzero component using chosen prior weight
+    s=rbinom(n = sim,size=1,prob=p)##create a vector indexing whether comes from null or real depending on posterior weight, where for each simulation, an RV (0,1) is simulated from Binomial(n=1,size=1) according to posterio weight
+    pm=sapply(s,function(s){post_mean(priormean=0,priorsd=s*psd,datamean=dm,datase=dse)})##depending on whether null or alternative chosen, simulate posterior mean of distribution
+    ps=sqrt(sapply(s,function(s){post_var(priorsd=s*psd,datase=dse)}))#
+    bskept=sapply(seq(1:length(pm)),function(x){rnorm(1,mean = pm[x],sd=ps[x])})###for ever simulated mean, choose a 
+
+
+
 like = dnorm(hatlogHR,mean=th,sd=hatdataSE)
-pm=post_mean(priormean = 0,priorsd = 1,datamean = hatlogHR,datase = hatdataSE)
-ps=sqrt(post_var(priorsd = 1,datase = hatdataSE))
-post = dnorm(th,mean = pm,sd=ps)
-CI_low=pm-1.96*ps
-CI_up=pm+1.96*ps
-plot(th,post,type=&quot;l&quot;,ylab=&quot;Density&quot;,lty=2,lwd=3,xlab = expression(theta), panel.first = polyCurve(th, post, from = CI_low, to = CI_up),main=&quot;Optimist&quot;)
+
+CI_low=quantile(bskept,0.025)
+CI_up=quantile(bskept,0.975)
+plot(density(bskept),type=&quot;l&quot;,lty=2,lwd=3,xlim=c(-1,1),xlab = expression(theta),  yaxt=&#39;n&#39;,panel.first = polyCurve(density(bskept)$x,density(bskept)$y, from = CI_low, to = CI_up),main=&quot;Generous&quot;)
 lines(th,like,lty=3,lwd=5,col=&quot;red&quot;)
-lines(th,prior,lty=2,lwd=3,col=&quot;blue&quot;)
-legend(0.4,1.5,c(&quot;Prior&quot;,&quot;Likelihood&quot;,&quot;Posterior&quot;),lty=c(2,3,1),lwd=c(3,3,3),col=c(&quot;Blue&quot;,&quot;red&quot;,&quot;black&quot;))
+lines(density(priov),lty=2,lwd=3,col=&quot;blue&quot;)
+#legend(0.4,1.5,c(&quot;Prior&quot;,&quot;Likelihood&quot;,&quot;Posterior&quot;),lty=c(2,3,1),lwd=c(3,3,3),col=c(&quot;Blue&quot;,&quot;red&quot;,&quot;black&quot;))
 
 
+##moderate
 
-##moderate prior
-prior = dnorm(th,0,0.1)
-pm=post_mean(priormean = 0,priorsd = 0.1,datamean = hatlogHR,datase = hatdataSE)
-ps=sqrt(post_var(priorsd = 0.1,datase = hatdataSE))
-post = dnorm(th,mean = pm,sd=ps)
-CI_low=pm-1.96*ps
-CI_up=pm+1.96*ps
-plot(th,post,type=&quot;l&quot;,ylab=&quot;Density&quot;,lty=2,lwd=3,xlab = expression(theta), panel.first = polyCurve(th, post, from = CI_low, to = CI_up),main=&quot;Moderate&quot;)
+ p1=0.50
+  priorid=rbinom(sim,prob=p1,size=1)
+    priov=sapply(priorid,function(x){x*rnorm(1,0,psd)})
+
+
+  
+    p=pipost(p1,dataSE=dse,datamean=dm,priorsd=psd)###computer posterior weight on nonzero component using chosen prior weight
+    s=rbinom(n = sim,size=1,prob=p)##create a vector indexing whether comes from null or real depending on posterior weight, where for each simulation, an RV (0,1) is simulated from Binomial(n=1,size=1) according to posterio weight
+    pm=sapply(s,function(s){post_mean(priormean=0,priorsd=s*psd,datamean=dm,datase=dse)})##depending on whether null or alternative chosen, simulate posterior mean of distribution
+    ps=sqrt(sapply(s,function(s){post_var(priorsd=s*psd,datase=dse)}))#
+    bmod=sapply(seq(1:length(pm)),function(x){rnorm(1,mean = pm[x],sd=ps[x])})###for ever simulated mean, choose a 
+
+
+CI_low=quantile(bmod,0.025)
+CI_up=quantile(bmod,0.975)
+plot(density(bmod),type=&quot;l&quot;,ylab=&quot;Density&quot;,lty=2,lwd=3,xlim=c(-1,1),xlab = expression(theta), panel.first = polyCurve(density(bmod)$x,density(bmod)$y, from = CI_low, to = CI_up),main=&quot;Moderate&quot;)
 lines(th,like,lty=3,lwd=5,col=&quot;red&quot;)
-lines(th,prior,lty=2,lwd=3,col=&quot;blue&quot;)
-legend(0.4,4,c(&quot;Prior&quot;,&quot;Likelihood&quot;,&quot;Posterior&quot;),lty=c(2,3,1),lwd=c(3,3,3),col=c(&quot;Blue&quot;,&quot;red&quot;,&quot;black&quot;))
+lines(density(priov),lty=2,lwd=3,col=&quot;blue&quot;)
+#legend(0.4,1.5,c(&quot;Prior&quot;,&quot;Likelihood&quot;,&quot;Posterior&quot;),lty=c(2,3,1),lwd=c(3,3,3),col=c(&quot;Blue&quot;,&quot;red&quot;,&quot;black&quot;))
 
 
 
-##more skeptical prior
-prior = dnorm(th,0,0.01)
-pm=post_mean(priormean = 0,priorsd = 0.01,datamean = hatlogHR,datase = hatdataSE)
-ps=sqrt(post_var(priorsd = 0.01,datase = hatdataSE))
-post = dnorm(th,mean = pm,sd=ps)
-CI_low=pm-1.96*ps
-CI_up=pm+1.96*ps
-plot(th,post,type=&quot;l&quot;,ylab=&quot;Density&quot;,lty=2,lwd=3,xlab = expression(theta), panel.first = polyCurve(th, post, from = CI_low, to = CI_up),main=&quot;Skeptic&quot;)
+
+
+##more skeptic prior
+
+rm(priov)
+
+ p1=0.10
+  priorid=rbinom(sim,prob=p1,size=1)
+    priov=sapply(priorid,function(x){x*rnorm(1,0,psd)})
+
+
+  
+    p=pipost(p1,dataSE=dse,datamean=dm,priorsd=psd)###computer posterior weight on nonzero component using chosen prior weight
+    s=rbinom(n = sim,size=1,prob=p)##create a vector indexing whether comes from null or real depending on posterior weight, where for each simulation, an RV (0,1) is simulated from Binomial(n=1,size=1) according to posterio weight
+    pm=sapply(s,function(s){post_mean(priormean=0,priorsd=s*psd,datamean=dm,datase=dse)})##depending on whether null or alternative chosen, simulate posterior mean of distribution
+    ps=sqrt(sapply(s,function(s){post_var(priorsd=s*psd,datase=dse)}))#
+    bskept=sapply(seq(1:length(pm)),function(x){rnorm(1,mean = pm[x],sd=ps[x])})###for ever simulated mean, choose a 
+CI_low=quantile(bskept,0.025)
+CI_up=quantile(bskept,0.975)
+plot(density(bskept),type=&quot;l&quot;,ylab=&quot;&quot;,lty=2, yaxt=&#39;n&#39;,lwd=3,xlim=c(-1,1),xlab = expression(theta), panel.first = polyCurve(density(bskept)$x,density(bskept)$y, from = CI_low, to = CI_up),main=&quot;Skeptic&quot;)
 lines(th,like,lty=3,lwd=5,col=&quot;red&quot;)
-lines(th,prior,lty=2,lwd=3,col=&quot;blue&quot;)
-legend(0.4,15,c(&quot;Prior&quot;,&quot;Likelihood&quot;,&quot;Posterior&quot;),lty=c(2,3,1),lwd=c(3,3,3),col=c(&quot;Blue&quot;,&quot;red&quot;,&quot;black&quot;))</code></pre>
+lines(density(priov),lty=2,lwd=3,col=&quot;blue&quot;)</code></pre>
 <p><img src="figure/stopdapt.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-1">
+Past versions of unnamed-chunk-6-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/surbut/nejm/blob/2e9c065821901fb4ed13c651902b5c9e13e49fc7/docs/figure/stopdapt.Rmd/unnamed-chunk-6-1.png" target="_blank">2e9c065</a>
+</td>
+<td>
+Sarah Urbut
+</td>
+<td>
+2019-09-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>#legend(0.4,1.5,c(&quot;Prior&quot;,&quot;Likelihood&quot;,&quot;Posterior&quot;),lty=c(2,3,1),lwd=c(3,3,3),col=c(&quot;Blue&quot;,&quot;red&quot;,&quot;black&quot;))</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -877,7 +1100,7 @@ legend(0.4,15,c(&quot;Prior&quot;,&quot;Likelihood&quot;,&quot;Posterior&quot;),
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>R version 3.5.2 (2018-12-20)
 Platform: x86_64-apple-darwin15.6.0 (64-bit)
-Running under: macOS Mojave 10.14.5
+Running under: macOS Mojave 10.14.6
 
 Matrix products: default
 BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
@@ -912,6 +1135,8 @@ footer is added to webpages before the MathJax javascript. -->
 </script>
 
 
+</div>
+</div>
 
 </div>
 
@@ -943,12 +1168,33 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+
 <script>
-$(document).ready(function () {
-  window.initializeCodeFolding("show" === "show");
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
 });
 </script>
-
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

@@ -381,7 +381,7 @@ div.section {
 
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
-<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
 </button>
 </p>
 <div id="workflowr-report" class="collapse">
@@ -390,7 +390,7 @@ div.section {
 <a data-toggle="tab" href="#summary">Summary</a>
 </li>
 <li>
-<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -399,10 +399,10 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2019-08-13
+<strong>Last updated:</strong> 2019-09-17
 </p>
 <p>
-<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong> <code>nejm/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
@@ -418,12 +418,12 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+<p>The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
 </div>
 </div>
 </div>
@@ -490,10 +490,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsurbutnejmtreea3abbc7de22fdd62d99298a939452f981feb5301targetblanka3abbc7a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/surbut/nejm/tree/a3abbc7de22fdd62d99298a939452f981feb5301" target="_blank">a3abbc7</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsurbutnejmtree2e9c065821901fb4ed13c651902b5c9e13e49fc7targetblank2e9c065a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/surbut/nejm/tree/2e9c065821901fb4ed13c651902b5c9e13e49fc7" target="_blank">2e9c065</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomsurbutnejmtreea3abbc7de22fdd62d99298a939452f981feb5301targetblanka3abbc7a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomsurbutnejmtree2e9c065821901fb4ed13c651902b5c9e13e49fc7targetblank2e9c065a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -505,11 +505,14 @@ Ignored files:
     Ignored:    .Rhistory
     Ignored:    analysis/.DS_Store
     Ignored:    analysis/.Rhistory
+    Ignored:    docs/.DS_Store
+    Ignored:    docs/figure/.DS_Store
 
 Untracked files:
-    Untracked:  Untitled.Rmd
+    Untracked:  analysis/flash10.rds
 
 Unstaged changes:
+    Modified:   analysis/pi0.Rmd
     Modified:   analysis/stopdapt.Rmd
 
 </code></pre>
@@ -549,6 +552,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/surbut/nejm/b330ad11efe96a110a162fcc2582d5f0f4adbcd2/docs/pi0.html" target="_blank">b330ad1</a>
+</td>
+<td>
+Sarah Urbut
+</td>
+<td>
+2019-08-13
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -595,7 +615,8 @@ pipost=function(pi1,dataSE,datamean,priorsd){
   return(pip)}
 
 
-pis=seq(0,1,by=0.01)##proportional weight on slab (non0 component)
+pis=rev(seq(0,1,by=0.01))##proportional weight on slab (non0 component)
+pis=seq(0,1,by=0.01)
 dse=0.21
 dm=-0.44
 priorsd=1
@@ -619,9 +640,46 @@ require(plotrix)</code></pre>
 <pre><code>Loading required package: plotrix</code></pre>
 <pre class="r"><code>medians=apply(simmat,2,median)
 
-plotCI(pis, y = colMeans(simmat), ui=CIS[2,], li = CIS[1,],ylim=c(-1.1,0.2),cex=0.5,xlab=expression(paste(&quot;Optimism:&quot;,pi[alt])),ylab=&quot;PosteriorMedian[CI]&quot;,main=expression(paste(&quot;Posterior CI vs Optimism&quot;,pi[alt])))
+plotCI(1-pis, y = colMeans(simmat), ui=CIS[2,], li = CIS[1,],ylim=c(-1.1,0.2),cex=0.5,xlab=expression(paste(pi[0])),ylab=&quot;PosteriorMedian[CI]&quot;,main=expression(paste(&quot;Posterior CI vs &quot;,pi[0])))
 abline(h=0,col=&quot;red&quot;,lwd=2,lty=2)</code></pre>
 <p><img src="figure/pi0.Rmd/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-1-1">
+Past versions of unnamed-chunk-1-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-1-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/surbut/nejm/blob/b330ad11efe96a110a162fcc2582d5f0f4adbcd2/docs/figure/pi0.Rmd/unnamed-chunk-1-1.png" target="_blank">b330ad1</a>
+</td>
+<td>
+Sarah Urbut
+</td>
+<td>
+2019-08-13
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code># polygon(c(rev(pis), pis), c(rev(CIS[1,]), CIS[2,]), col = &#39;grey80&#39;, border = NA)
 # lines(pis, CIS[1,], lty = &#39;dashed&#39;, col = &#39;red&#39;)
 # lines(pis, CIS[2,], lty = &#39;dashed&#39;, col = &#39;red&#39;)
@@ -640,7 +698,7 @@ abline(h=0,col=&quot;red&quot;,lwd=2,lty=2)</code></pre>
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>R version 3.5.2 (2018-12-20)
 Platform: x86_64-apple-darwin15.6.0 (64-bit)
-Running under: macOS Mojave 10.14.5
+Running under: macOS Mojave 10.14.6
 
 Matrix products: default
 BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
