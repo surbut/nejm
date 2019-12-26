@@ -14,7 +14,7 @@ editor_options:
 
 Power Analysis
 
-We wish to simulate a non-zero logOR in a study with sample size large enough that the effect can be detected at 80% in a frequentist analysis. To start with, let's test a situation in which the logOR is actually 1.2, with a population SD of 0.20 and a sample size of 100.
+We wish to simulate a non-zero logOR in a study with sample size large enough that the effect can be detected at $80%$ in a frequentist analysis. To start with, let's test a situation in which the logOR is actually 1.2, with a population SD of $0.20$ and a sample size of 100.
 
 The goal is to test our power to estimate the power to detect a true difference (at say, a 0.05 frequentist $\alpha$ threshold) given that the sampling distribution arises from a mixture normal with $\pi_{0}$ component on a 'spike' at 0, and the slab (or 1- $\pi_{0}$ componenet) on an alternative compoenent that quantifies our uncertainty about a non-zero estimate of the underlying logOR.  
 
@@ -38,12 +38,12 @@ abline(h=0)
 
 In this paper, the standard error $\hat\sigma$ was 0.21. This means that the rejection region that the logOR is significantly different than 0 at an $\alpha$ of 0.05 would be +/- 1.96*0.21 = +/- 0.41.
 
-We can plot samplef from our posterior at various levels of pi and sigma hat and compute how often the null is appropriately rejected.
+We can sample from our posterior at various levels of $\pi$ and $\hat{sigma}$ and compute how often the null is appropriately rejected.
 
 
 
 
-We should sample from the mixture distribution and determine how many times the $95%$ credible interval excludes 0 for different choces of $\sigma$ and $\pi$, assuming that the observed logOR is the true logOR. We thus seek to determine how frequently a values chosen from posterior distribution excludes CI (but is this ok, using a posterior probability for frequentist sampling?)
+We should sample from the mixture distribution and determine how many times the $95\%$ credible interval excludes 0 for different choces of $\sigma$ and $\pi$, assuming that the observed logOR is the true logOR. We thus seek to determine how frequently a values chosen from posterior distribution excludes CI (but is this ok, using a posterior probability for frequentist sampling?)
 
 In the following script, we simulate for a range of pis and a fixed prior sigma, and compute how many time the posterior mean and variance produce a random variable that correctly rejects alternaitve. Here we plot for a prior sigma of 0.5, as discovered in the bottom sim is the best choice of $\sigma$.
 
@@ -81,7 +81,7 @@ plot(pis,powermat,xlab="PiAlt")
 ```
 
 
-We can see that the maximal power achieved is roughly 0.5, which is due to the fact that the demonstrated logOR considered here, -0.44, and corresponding standard error, 0.21, are so small, that the maximal posterior probability that they arose from the non-zero component is ~0.08 even with a pi_alternative of 0.99.
+We can see that the maximal power achieved is roughly 0.5, which is due to the fact that the demonstrated logOR considered here, -0.44, and corresponding standard error, 0.21, are so small, that the maximal posterior probability that they arose from the non-zero component is ~0.08 even with a $\pi_{alternative}$ of 0.99.
 
 
 We can also for a given $\pi$, and consider over all prior $\sigma^{2}$:
