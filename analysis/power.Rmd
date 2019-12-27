@@ -49,8 +49,8 @@ In the following script, we simulate for a range of pis and a fixed prior sigma,
 
 
 ```{r}
-setwd("~/nejm/analysis/")
-source("../code/scripts.R")## scripts to compute posterior mean, variance and posterior weights
+#setwd("~/nejm/analysis/")
+source("~/nejm/code/scripts.R")## scripts to compute posterior mean, variance and posterior weights
 
 ##Simulation script
 runpisim=function(dm,priorsd,dse,priormean=0,sim=1000){
