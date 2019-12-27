@@ -18,7 +18,7 @@ We wish to simulate a non-zero logOR in a study with sample size large enough th
 
 The goal is to test our power to estimate the power to detect a true difference (at say, a 0.05 frequentist $\alpha$ threshold) given that the sampling distribution arises from a mixture normal with $\pi_{0}$ component on a 'spike' at 0, and the slab (or 1- $\pi_{0}$ componenet) on an alternative compoenent that quantifies our uncertainty about a non-zero estimate of the underlying logOR.  
 
-```{r, eval=FALSE,echo=FALSE}
+```{r, eval=FALSE,echo=TRUE}
 ##Simulation of simple power calculation for review, in which we quanitfy the difference between a null and alternaitve distribution and compute how many times the empirical alternative exceeds the rejection region
 mean1=0
 mean2=seq(0.01,2,by=0.10)
@@ -110,7 +110,7 @@ test=runSigmasim(dm = dm,dse = dse,pi0=0.5)
 powermat=apply(test,2,function(x){1-mean(x<0.41&x>-0.41)})
 minsig=0.1;maxsig=2;inc=0.05
 sigmas=seq(minsig,maxsig,by=inc)
-plot(sigmas,powermat,xlab="PriorSigma", main=expression("Power vs", pi0) ,pch=0.1)
+plot(sigmas,powermat,xlab=expression(paste("Prior ",sigma)), ylab="Power", main=expression(paste("Power vs ", pi,"0")) ,pch=1,cex=0.5,col="red")
 ```
 
 Here we can see that the choice of $\sigma$ matters much more than the choice of $\pi0$, and that the power of the simulation to detect an effect if it truly exists seems to be maximal with prior $\sigma^{2}$ of ~ 0.5 and that the maximal power achieved is roughly 50%. THis stems from the fact that even under a situation with $pi0$ at 0, such a small observed logOR is equally likely to stem from the null as the alternaitve. Let's examine for larger dm, one that is twice the first.
@@ -123,13 +123,13 @@ pi0s=seq(0.01,1,by=0.05)##proportional weight on 0 component
 pis=1-pi0s
 simmat=runpisim(dm = dm,dse = dse,priorsd = 0.5)
 powermat=apply(simmat,2,function(x){1-mean(x<0.41&x>-0.41)})
-plot(pis,powermat,xlab="PiAlt")
+plot(pis,powermat,xlab=expression(paste(pi,"Alternative")), ylab="Power", main=expression(paste("Power vs ", pi,"Alternative")) ,pch=1,cex=0.5,col="red")
 
 test=runSigmasim(dm = dm,dse = dse,pi0=0.5)
 powermat=apply(test,2,function(x){1-mean(x<0.41&x>-0.41)})
 minsig=0.1;maxsig=2;inc=0.05
 sigmas=seq(minsig,maxsig,by=inc)
-plot(sigmas,powermat,xlab="PriorSigma", main=expression("Power vs", pi0) ,pch=0.1)
+plot(sigmas,powermat,xlab=expression(paste("Prior ",sigma)), ylab="Power", main=expression(paste("Power vs ", sigma)) ,pch=1,cex=0.5,col="red")
 ```
 
 WE can see the importance of a larger parameter value, which really only emphasizes the need for such 'sobriety' with larger trials. Perhpas we should focus on a trial with a larger demonstrated effect, and show the importance of 'sobriety' in cases in which one is eager to reject the null, because I think focusing on power to detect a very small effect when we're trying to emphasize skepticisim detracts from our focus.
