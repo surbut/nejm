@@ -45,11 +45,11 @@ We can sample from our posterior at various levels of $\pi$ and $\hat{sigma}$ an
 
 We should sample from the mixture distribution and determine how many times the $95\%$ credible interval excludes 0 for different choces of $\sigma$ and $\pi$, assuming that the observed logOR is the true logOR. We thus seek to determine how frequently a values chosen from posterior distribution excludes CI (but is this ok, using a posterior probability for frequentist sampling?)
 
-In the following script, we simulate for a range of pis and a fixed prior sigma, and compute how many time the posterior mean and variance produce a random variable that correctly rejects alternaitve. Here we plot for a prior sigma of 0.5, as discovered in the bottom sim is the best choice of $\sigma$.
+In the following script, we simulate for a range of pis and a fixed prior sigma, and compute how many time the posterior mean and variance produce a random variable that correctly rejects alternaitve. Here we plot for a prior $\sigma$ of 0.5, as discovered in the bottom simulation is the best choice of $\sigma$.
 
 
 ```{r}
-#setwd("~/nejm/analysis/")
+
 source("~/nejm/code/scripts.R")## scripts to compute posterior mean, variance and posterior weights
 
 ##Simulation script
@@ -77,7 +77,7 @@ pi0s=seq(0.01,1,by=0.05)##proportional weight on 0 component
 pis=1-pi0s
 simmat=runpisim(dm = dm,dse = dse,priorsd = 0.5)
 powermat=apply(simmat,2,function(x){1-mean(x<0.41&x>-0.41)})
-plot(pis,powermat,xlab="PiAlt")
+plot(pis,powermat,xlab=expression(paste(1-pi,"0")), main=expression(paste("Power vs ", 1-pi,"0")) ,pch=1,cex=0.5,col="red")
 ```
 
 
@@ -110,10 +110,10 @@ test=runSigmasim(dm = dm,dse = dse,pi0=0.5)
 powermat=apply(test,2,function(x){1-mean(x<0.41&x>-0.41)})
 minsig=0.1;maxsig=2;inc=0.05
 sigmas=seq(minsig,maxsig,by=inc)
-plot(sigmas,powermat,xlab=expression(paste("Prior ",sigma)), ylab="Power", main=expression(paste("Power vs ", pi,"0")) ,pch=1,cex=0.5,col="red")
+plot(sigmas,powermat,xlab=expression(paste("Prior ",sigma)), ylab="Power", main=expression(paste("Power vs Prior ", sigma)) ,pch=1,cex=0.5,col="red")
 ```
 
-Here we can see that the choice of $\sigma$ matters much more than the choice of $\pi0$, and that the power of the simulation to detect an effect if it truly exists seems to be maximal with prior $\sigma^{2}$ of ~ 0.5 and that the maximal power achieved is roughly 50%. THis stems from the fact that even under a situation with $pi0$ at 0, such a small observed logOR is equally likely to stem from the null as the alternaitve. Let's examine for larger dm, one that is twice the first.
+Here we can see that the choice of $\sigma$ matters much more than the choice of $\pi_0$, and that the power of the simulation to detect an effect if it truly exists seems to be maximal with prior $\sigma^{2}$ of ~ 0.5 and that the maximal power achieved is roughly 50%. This stems from the fact that even under a situation with $\pi_0$ at 0, such a small observed logOR is equally likely to stem from the null as the alternaitve. Let's examine for larger dm, one that is twice the first.
 
 ```{r}
 
@@ -123,7 +123,7 @@ pi0s=seq(0.01,1,by=0.05)##proportional weight on 0 component
 pis=1-pi0s
 simmat=runpisim(dm = dm,dse = dse,priorsd = 0.5)
 powermat=apply(simmat,2,function(x){1-mean(x<0.41&x>-0.41)})
-plot(pis,powermat,xlab=expression(paste(pi,"Alternative")), ylab="Power", main=expression(paste("Power vs ", pi,"Alternative")) ,pch=1,cex=0.5,col="red")
+plot(pis,powermat,xlab=expression(paste(1-pi,"0")), main=expression(paste("Power vs ", 1-pi,"0")) ,pch=1,cex=0.5,col="red")
 
 test=runSigmasim(dm = dm,dse = dse,pi0=0.5)
 powermat=apply(test,2,function(x){1-mean(x<0.41&x>-0.41)})
@@ -132,4 +132,4 @@ sigmas=seq(minsig,maxsig,by=inc)
 plot(sigmas,powermat,xlab=expression(paste("Prior ",sigma)), ylab="Power", main=expression(paste("Power vs ", sigma)) ,pch=1,cex=0.5,col="red")
 ```
 
-WE can see the importance of a larger parameter value, which really only emphasizes the need for such 'sobriety' with larger trials. Perhpas we should focus on a trial with a larger demonstrated effect, and show the importance of 'sobriety' in cases in which one is eager to reject the null, because I think focusing on power to detect a very small effect when we're trying to emphasize skepticisim detracts from our focus.
+We can see the importance of a larger parameter value, which really only emphasizes the need for such 'sobriety' with larger trials. Perhpas we should focus on a trial with a larger demonstrated effect, and show the importance of 'sobriety' in cases in which one is eager to reject the null, because I think focusing on power to detect a very small effect when we're trying to emphasize skepticisim detracts from our focus.
