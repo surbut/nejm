@@ -32,12 +32,13 @@ pipost=function(pi1,dataSE,datamean,priorsd){
   pip=joint/marginal
   return(pip)}
 
-
-pis=rev(seq(0,1,by=0.01))##proportional weight on slab (non0 component)
-pis=seq(0,1,by=0.01)
+set.seed(123)
+pi0s=seq(0.01,1,by=0.05)##proportional weight on slab (non0 component)
+pis=1-pi0s
+#pis=seq(0,1,by=0.01)
 dse=0.21
 dm=-0.44
-priorsd=1
+priorsd=0.75
 sim=10000
 simmat=matrix(NA,ncol=length(pis),nrow=sim)
 for(i in 1:length(pis)){
@@ -51,13 +52,13 @@ for(i in 1:length(pis)){
 }
 
 
-CIS=apply(simmat,2,function(x){quantile(x,probs = c(0.025,0.975))})
+CIS=apply(simmat,2,function(x){round(quantile(x,probs = c(0.025,0.975)),2)})
 
 
 require(plotrix)
 medians=apply(simmat,2,median)
 
-plotCI(1-pis, y = colMeans(simmat), ui=CIS[2,], li = CIS[1,],ylim=c(-1.1,0.2),cex=0.5,xlab=expression(paste(pi[0])),ylab="PosteriorMedian[CI]",main=expression(paste("Posterior CI vs ",pi[0])))
+plotCI(1-pis, y = colMeans(simmat), ui=CIS[2,], li = CIS[1,],ylim=c(-1.1,0.2),cex=0.5,xlab="Clinical Skepticism",ylab="95% Credible Interval",main=expression("Posterior CI vs Clinical Skepticism"))
 abline(h=0,col="red",lwd=2,lty=2)
 
 # polygon(c(rev(pis), pis), c(rev(CIS[1,]), CIS[2,]), col = 'grey80', border = NA)

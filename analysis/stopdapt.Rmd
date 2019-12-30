@@ -205,48 +205,30 @@ post_mean=function(priormean,priorsd,datamean,datase){
     
     
    
-    dse=0.22
+    dse=0.21
     dm=-0.44
     psd=1
     sim=1000
     
 
     
-       ##moderate
-  hatlogHR=-0.44
+hatlogHR=-0.44
 hatdataSE=0.21
 
-  p1=1
-   psd=10
+p1=1
+psd=10
+set.seed(123)
    
-    plot_prior=function(p1,hatlogOR,hatdataSE,psd,title){
-      
-  priorid=rbinom(sim,prob=p1,size=1)
-    priov=sapply(priorid,function(x){x*rnorm(1,0,psd)})
 
    
+   plot_prior=function(p1,hatlogOR,hatdataSE,psd,title){
   
-    p=pipost(p1,dataSE=dse,datamean=dm,priorsd=psd)###computer posterior weight on nonzero component using chosen prior weight
-    s=rbinom(n = sim,size=1,prob=p)##create a vector indexing whether comes from null or real depending on posterior weight, where for each simulation, an RV (0,1) is simulated from Binomial(n=1,size=1) according to posterio weight
-    pm=sapply(s,function(s){post_mean(priormean=0,priorsd=s*psd,datamean=dm,datase=dse)})##depending on whether null or alternative chosen, simulate posterior mean of distribution
-    ps=sqrt(sapply(s,function(s){post_var(priorsd=s*psd,datase=dse)}))#
-    bmod=sapply(seq(1:length(pm)),function(x){rnorm(1,mean = pm[x],sd=ps[x])})###for ever simulated mean, choose a 
-    
- 
-
-
-# 
-# 
-
-
 th = seq(-1,1,length=500)
 
 
 
 
-##frequentist
 
- 
   priorid=rbinom(sim,prob=p1,size=1)
     priov=sapply(priorid,function(x){x*rnorm(1,0,psd)})
 
@@ -265,11 +247,15 @@ like = dnorm(hatlogHR,mean=th,sd=hatdataSE)
 CI_low=quantile(bskept,0.025)
 CI_up=quantile(bskept,0.975)
 
-plot(density(bskept),type="l",ylab="",lty=1,lwd=3,xlim=c(-1,1),yaxt='n',xaxt='n',xlab = expression(theta),main=title) #panel.first = polyCurve(density(bskept)$x,density(bskept)$y, from = CI_low, to = CI_up),
-       
-lines(th,like,lty=3,lwd=5,col="red")
-lines(density(priov),lty=2,lwd=3,col="blue")
-legend(0.2,1.5,c("Prior","Likelihood","Posterior"),lty=c(2,3,1),lwd=c(3,3,3),col=c("Blue","red","black"))}
+plot(density(bskept),type="l",ylab="",lty=1,lwd=3,xlim=c(-1,1),ylim=c(0,5),yaxt='n',#xaxt='n',
+     xlab = expression(theta),main=title) #panel.first = polyCurve(density(bskept)$x,density(bskept)$y, from = CI_low, to = CI_up),
+abline(v=CI_low,col="purple",lty=2)
+abline(v=CI_up,col="purple",lty=2)
+abline(v=mean(bskept),col="green",lty=3,lwd=3)
+lines(th,like,lty=1,lwd=3,col="red")
+lines(density(priov),lty=1,lwd=3,col="blue")}
+    
+#legend(0,1.7,c("Prior","Likelihood","Posterior"),lty=c(1,1,1),lwd=c(3,3,3),col=c("Blue","red","black"))}
 
 
 ```
@@ -281,7 +267,17 @@ op <- par(mfrow = c(2,2),
            oma = c(5,4,0,0) + 0.1,
            mar = c(0,0,1,1) + 0.1)
 
-plot_prior(p1=1,hatlogOR = hatlogOR,psd = 10,hatdataSE = 0.22,title="Frequentist")
-plot_prior(p1=0.90,hatlogOR = hatlogOR,psd = 1,hatdataSE = 0.22,title="Generous")
-plot_prior(p1=0.50,hatlogOR = hatlogOR,psd = 1,hatdataSE = 0.22,title="Moderate")
-plot_prior(p1=0.10,hatlogOR = hatlogOR,psd = 1,hatdataSE = 0.22,title="Skeptic")
+
+####plot true frequentist, remove dotted lines
+plot(th,like,col="black",main="Frequentist",ylim=c(0,5),lty=1,lwd=3)
+legend(0,5,c("Prior","Likelihood","Posterior","95% CI","Mean"),lty=c(1,1,1,2,2),lwd=c(3,3,3,1,3),col=c("Blue","red","black","purple","green"))
+lines(th,rep(0.01,length(th)),col="blue",lty=1,lwd=3)
+lines(th,like,col="red",lty=1,lwd=3)
+abline(v=quantile(like,0.025),col="purple",lty=2)
+abline(v=quantile(like,0.975),col="purple",lty=2)
+abline(v=mean(bskept),col="green",lty=3,lwd=3)
+
+set.seed(123)
+plot_prior(p1=1,hatlogOR = -0.6,psd = 3,hatdataSE = 0.21,title="Generous")
+plot_prior(p1=0.40,hatlogOR = -0.6,psd = 1,hatdataSE = 0.21,title="Moderate")
+plot_prior(p1=0.10,hatlogOR = -0.6,psd = 1,hatdataSE = 0.21,title="Skeptic")
