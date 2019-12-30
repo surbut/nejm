@@ -337,7 +337,7 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2019-12-27
+<strong>Last updated:</strong> 2019-12-30
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
@@ -438,14 +438,6 @@ relative
 <tbody>
 <tr>
 <td style="text-align:left;">
-~/nejm/analysis/
-</td>
-<td style="text-align:left;">
-analysis
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
 ~/nejm/code/scripts.R
 </td>
 <td style="text-align:left;">
@@ -460,10 +452,10 @@ code/scripts.R
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsurbutnejmtree33537b02d42f1dd8723380705e29aa07cde4e48ctargetblank33537b0a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/surbut/nejm/tree/33537b02d42f1dd8723380705e29aa07cde4e48c" target="_blank">33537b0</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsurbutnejmtreebe29c2eda7805ceba1e346d90d42f2de68ca3a53targetblankbe29c2ea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/surbut/nejm/tree/be29c2eda7805ceba1e346d90d42f2de68ca3a53" target="_blank">be29c2e</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomsurbutnejmtree33537b02d42f1dd8723380705e29aa07cde4e48ctargetblank33537b0a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomsurbutnejmtreebe29c2eda7805ceba1e346d90d42f2de68ca3a53targetblankbe29c2ea" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -523,6 +515,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/surbut/nejm/blob/be29c2eda7805ceba1e346d90d42f2de68ca3a53/analysis/power.Rmd" target="_blank">be29c2e</a>
+</td>
+<td>
+Sarah Urbut
+</td>
+<td>
+2019-12-30
+</td>
+<td>
+wflow_publish(“~/nejm/analysis/power.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/surbut/nejm/40f9bd858097f968a1bc60032dbe4ff8607e8d42/docs/power.html" target="_blank">40f9bd8</a>
+</td>
+<td>
+Sarah Urbut
+</td>
+<td>
+2019-12-27
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -686,9 +712,8 @@ abline(h=0)</code></pre>
 <p>In this paper, the standard error <span class="math inline">\(\hat\sigma\)</span> was 0.21. This means that the rejection region that the logOR is significantly different than 0 at an <span class="math inline">\(\alpha\)</span> of 0.05 would be +/- 1.96*0.21 = +/- 0.41.</p>
 <p>We can sample from our posterior at various levels of <span class="math inline">\(\pi\)</span> and <span class="math inline">\(\hat{sigma}\)</span> and compute how often the null is appropriately rejected.</p>
 <p>We should sample from the mixture distribution and determine how many times the <span class="math inline">\(95\%\)</span> credible interval excludes 0 for different choces of <span class="math inline">\(\sigma\)</span> and <span class="math inline">\(\pi\)</span>, assuming that the observed logOR is the true logOR. We thus seek to determine how frequently a values chosen from posterior distribution excludes CI (but is this ok, using a posterior probability for frequentist sampling?)</p>
-<p>In the following script, we simulate for a range of pis and a fixed prior sigma, and compute how many time the posterior mean and variance produce a random variable that correctly rejects alternaitve. Here we plot for a prior sigma of 0.5, as discovered in the bottom sim is the best choice of <span class="math inline">\(\sigma\)</span>.</p>
-<pre class="r"><code>#setwd(&quot;~/nejm/analysis/&quot;)
-source(&quot;~/nejm/code/scripts.R&quot;)## scripts to compute posterior mean, variance and posterior weights
+<p>In the following script, we simulate for a range of pis and a fixed prior sigma, and compute how many time the posterior mean and variance produce a random variable that correctly rejects alternaitve. Here we plot for a prior <span class="math inline">\(\sigma\)</span> of 0.5, as discovered in the bottom simulation is the best choice of <span class="math inline">\(\sigma\)</span>.</p>
+<pre class="r"><code>source(&quot;~/nejm/code/scripts.R&quot;)## scripts to compute posterior mean, variance and posterior weights
 
 ##Simulation script
 runpisim=function(dm,priorsd,dse,priormean=0,sim=1000){
@@ -715,7 +740,7 @@ pi0s=seq(0.01,1,by=0.05)##proportional weight on 0 component
 pis=1-pi0s
 simmat=runpisim(dm = dm,dse = dse,priorsd = 0.5)
 powermat=apply(simmat,2,function(x){1-mean(x&lt;0.41&amp;x&gt;-0.41)})
-plot(pis,powermat,xlab=&quot;PiAlt&quot;)</code></pre>
+plot(pis,powermat,xlab=expression(paste(1-pi,&quot;0&quot;)), main=expression(paste(&quot;Power vs &quot;, 1-pi,&quot;0&quot;)) ,pch=1,cex=0.5,col=&quot;red&quot;)</code></pre>
 <p><img src="figure/power.Rmd/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-2-1">
@@ -739,6 +764,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/surbut/nejm/blob/40f9bd858097f968a1bc60032dbe4ff8607e8d42/docs/figure/power.Rmd/unnamed-chunk-2-1.png" target="_blank">40f9bd8</a>
+</td>
+<td>
+Sarah Urbut
+</td>
+<td>
+2019-12-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/surbut/nejm/blob/05086d86b34fb4d66c43c4d3851581d796c4c376/docs/figure/power.Rmd/unnamed-chunk-2-1.png" target="_blank">05086d8</a>
@@ -779,7 +815,7 @@ test=runSigmasim(dm = dm,dse = dse,pi0=0.5)
 powermat=apply(test,2,function(x){1-mean(x&lt;0.41&amp;x&gt;-0.41)})
 minsig=0.1;maxsig=2;inc=0.05
 sigmas=seq(minsig,maxsig,by=inc)
-plot(sigmas,powermat,xlab=expression(paste(&quot;Prior &quot;,sigma)), ylab=&quot;Power&quot;, main=expression(paste(&quot;Power vs &quot;, pi,&quot;0&quot;)) ,pch=1,cex=0.5,col=&quot;red&quot;)</code></pre>
+plot(sigmas,powermat,xlab=expression(paste(&quot;Prior &quot;,sigma)), ylab=&quot;Power&quot;, main=expression(paste(&quot;Power vs Prior &quot;, sigma)) ,pch=1,cex=0.5,col=&quot;red&quot;)</code></pre>
 <p><img src="figure/power.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-3-1">
@@ -803,6 +839,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/surbut/nejm/blob/40f9bd858097f968a1bc60032dbe4ff8607e8d42/docs/figure/power.Rmd/unnamed-chunk-3-1.png" target="_blank">40f9bd8</a>
+</td>
+<td>
+Sarah Urbut
+</td>
+<td>
+2019-12-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/surbut/nejm/blob/8ac49782ecf6f0050214525b222a92174a291275/docs/figure/power.Rmd/unnamed-chunk-3-1.png" target="_blank">8ac4978</a>
@@ -829,14 +876,14 @@ Sarah Urbut
 </table>
 </div>
 </div>
-<p>Here we can see that the choice of <span class="math inline">\(\sigma\)</span> matters much more than the choice of <span class="math inline">\(\pi0\)</span>, and that the power of the simulation to detect an effect if it truly exists seems to be maximal with prior <span class="math inline">\(\sigma^{2}\)</span> of ~ 0.5 and that the maximal power achieved is roughly 50%. THis stems from the fact that even under a situation with <span class="math inline">\(pi0\)</span> at 0, such a small observed logOR is equally likely to stem from the null as the alternaitve. Let’s examine for larger dm, one that is twice the first.</p>
+<p>Here we can see that the choice of <span class="math inline">\(\sigma\)</span> matters much more than the choice of <span class="math inline">\(\pi_0\)</span>, and that the power of the simulation to detect an effect if it truly exists seems to be maximal with prior <span class="math inline">\(\sigma^{2}\)</span> of ~ 0.5 and that the maximal power achieved is roughly 50%. This stems from the fact that even under a situation with <span class="math inline">\(\pi_0\)</span> at 0, such a small observed logOR is equally likely to stem from the null as the alternaitve. Let’s examine for larger dm, one that is twice the first.</p>
 <pre class="r"><code>dm=2*dm
 
 pi0s=seq(0.01,1,by=0.05)##proportional weight on 0 component
 pis=1-pi0s
 simmat=runpisim(dm = dm,dse = dse,priorsd = 0.5)
 powermat=apply(simmat,2,function(x){1-mean(x&lt;0.41&amp;x&gt;-0.41)})
-plot(pis,powermat,xlab=expression(paste(pi,&quot;Alternative&quot;)), ylab=&quot;Power&quot;, main=expression(paste(&quot;Power vs &quot;, pi,&quot;Alternative&quot;)) ,pch=1,cex=0.5,col=&quot;red&quot;)</code></pre>
+plot(pis,powermat,xlab=expression(paste(1-pi,&quot;0&quot;)), main=expression(paste(&quot;Power vs &quot;, 1-pi,&quot;0&quot;)) ,pch=1,cex=0.5,col=&quot;red&quot;)</code></pre>
 <p><img src="figure/power.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-4-1">
@@ -860,6 +907,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/surbut/nejm/blob/40f9bd858097f968a1bc60032dbe4ff8607e8d42/docs/figure/power.Rmd/unnamed-chunk-4-1.png" target="_blank">40f9bd8</a>
+</td>
+<td>
+Sarah Urbut
+</td>
+<td>
+2019-12-27
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/surbut/nejm/blob/8ac49782ecf6f0050214525b222a92174a291275/docs/figure/power.Rmd/unnamed-chunk-4-1.png" target="_blank">8ac4978</a>
@@ -916,6 +974,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/surbut/nejm/blob/40f9bd858097f968a1bc60032dbe4ff8607e8d42/docs/figure/power.Rmd/unnamed-chunk-4-2.png" target="_blank">40f9bd8</a>
+</td>
+<td>
+Sarah Urbut
+</td>
+<td>
+2019-12-27
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/surbut/nejm/blob/8ac49782ecf6f0050214525b222a92174a291275/docs/figure/power.Rmd/unnamed-chunk-4-2.png" target="_blank">8ac4978</a>
 </td>
 <td>
@@ -940,7 +1009,7 @@ Sarah Urbut
 </table>
 </div>
 </div>
-<p>WE can see the importance of a larger parameter value, which really only emphasizes the need for such ‘sobriety’ with larger trials. Perhpas we should focus on a trial with a larger demonstrated effect, and show the importance of ‘sobriety’ in cases in which one is eager to reject the null, because I think focusing on power to detect a very small effect when we’re trying to emphasize skepticisim detracts from our focus.</p>
+<p>We can see the importance of a larger parameter value, which really only emphasizes the need for such ‘sobriety’ with larger trials. Perhpas we should focus on a trial with a larger demonstrated effect, and show the importance of ‘sobriety’ in cases in which one is eager to reject the null, because I think focusing on power to detect a very small effect when we’re trying to emphasize skepticisim detracts from our focus.</p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -951,7 +1020,7 @@ Sarah Urbut
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>R version 3.5.2 (2018-12-20)
 Platform: x86_64-apple-darwin15.6.0 (64-bit)
-Running under: macOS  10.15.1
+Running under: macOS  10.15.2
 
 Matrix products: default
 BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
