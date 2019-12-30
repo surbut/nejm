@@ -452,10 +452,10 @@ code/scripts.R
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsurbutnejmtreebe29c2eda7805ceba1e346d90d42f2de68ca3a53targetblankbe29c2ea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/surbut/nejm/tree/be29c2eda7805ceba1e346d90d42f2de68ca3a53" target="_blank">be29c2e</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsurbutnejmtree2deccba73c7de7703dad2f209fce4b155f4e25e1targetblank2deccbaa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/surbut/nejm/tree/2deccba73c7de7703dad2f209fce4b155f4e25e1" target="_blank">2deccba</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomsurbutnejmtreebe29c2eda7805ceba1e346d90d42f2de68ca3a53targetblankbe29c2ea" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomsurbutnejmtree2deccba73c7de7703dad2f209fce4b155f4e25e1targetblank2deccbaa" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -470,13 +470,8 @@ Ignored files:
     Ignored:    docs/.DS_Store
     Ignored:    docs/figure/.DS_Store
 
-Untracked files:
-    Untracked:  code/scripts.R
-    Untracked:  m_eQTL_bma.rds
-
 Unstaged changes:
-    Modified:   analysis/pi0.Rmd
-    Modified:   analysis/stopdapt.Rmd
+    Deleted:    m_eQTL_bma.rds
 
 </code></pre>
 <p>
@@ -515,6 +510,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/surbut/nejm/blob/2deccba73c7de7703dad2f209fce4b155f4e25e1/analysis/power.Rmd" target="_blank">2deccba</a>
+</td>
+<td>
+Sarah Urbut
+</td>
+<td>
+2019-12-30
+</td>
+<td>
+wflow_publish(“~/nejm/analysis/power.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/surbut/nejm/ac7a9f09d612d64ccb55a304a261fc0b7f1f51be/docs/power.html" target="_blank">ac7a9f0</a>
+</td>
+<td>
+Sarah Urbut
+</td>
+<td>
+2019-12-30
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -695,20 +724,6 @@ wflow_publish(“~/nejm/analysis/power.Rmd”)
 <p>Power Analysis</p>
 <p>We wish to simulate a non-zero logOR in a study with sample size large enough that the effect can be detected at <span class="math inline">\(80%\)</span> in a frequentist analysis. To start with, let’s test a situation in which the logOR is actually 1.2, with a population SD of <span class="math inline">\(0.20\)</span> and a sample size of 100.</p>
 <p>The goal is to test our power to estimate the power to detect a true difference (at say, a 0.05 frequentist <span class="math inline">\(\alpha\)</span> threshold) given that the sampling distribution arises from a mixture normal with <span class="math inline">\(\pi_{0}\)</span> component on a ‘spike’ at 0, and the slab (or 1- <span class="math inline">\(\pi_{0}\)</span> componenet) on an alternative compoenent that quantifies our uncertainty about a non-zero estimate of the underlying logOR.</p>
-<pre class="r"><code>##Simulation of simple power calculation for review, in which we quanitfy the difference between a null and alternaitve distribution and compute how many times the empirical alternative exceeds the rejection region
-mean1=0
-mean2=seq(0.01,2,by=0.10)
-sd=0.2
-null=rnorm(10000,mean1,sd)
-alternative=rnorm(10000,mean2,sd)
-
-
-plot(density(null),xlim=c(-1,3))
-lines(density(alternative))
-abline(v=qnorm(0.975,mean = 0,sd=0.2))
-
-plot(mean2,1-pnorm(qnorm(0.975,mean = 0,sd=sd),mean = mean2,sd=sd))
-abline(h=0)</code></pre>
 <p>In this paper, the standard error <span class="math inline">\(\hat\sigma\)</span> was 0.21. This means that the rejection region that the logOR is significantly different than 0 at an <span class="math inline">\(\alpha\)</span> of 0.05 would be +/- 1.96*0.21 = +/- 0.41.</p>
 <p>We can sample from our posterior at various levels of <span class="math inline">\(\pi\)</span> and <span class="math inline">\(\hat{sigma}\)</span> and compute how often the null is appropriately rejected.</p>
 <p>We should sample from the mixture distribution and determine how many times the <span class="math inline">\(95\%\)</span> credible interval excludes 0 for different choces of <span class="math inline">\(\sigma\)</span> and <span class="math inline">\(\pi\)</span>, assuming that the observed logOR is the true logOR. We thus seek to determine how frequently a values chosen from posterior distribution excludes CI (but is this ok, using a posterior probability for frequentist sampling?)</p>
@@ -741,55 +756,7 @@ pis=1-pi0s
 simmat=runpisim(dm = dm,dse = dse,priorsd = 0.5)
 powermat=apply(simmat,2,function(x){1-mean(x&lt;0.41&amp;x&gt;-0.41)})
 plot(pis,powermat,xlab=expression(paste(1-pi,&quot;0&quot;)), main=expression(paste(&quot;Power vs &quot;, 1-pi,&quot;0&quot;)) ,pch=1,cex=0.5,col=&quot;red&quot;)</code></pre>
-<p><img src="figure/power.Rmd/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-2-1">
-Past versions of unnamed-chunk-2-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-2-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/surbut/nejm/blob/40f9bd858097f968a1bc60032dbe4ff8607e8d42/docs/figure/power.Rmd/unnamed-chunk-2-1.png" target="_blank">40f9bd8</a>
-</td>
-<td>
-Sarah Urbut
-</td>
-<td>
-2019-12-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/surbut/nejm/blob/05086d86b34fb4d66c43c4d3851581d796c4c376/docs/figure/power.Rmd/unnamed-chunk-2-1.png" target="_blank">05086d8</a>
-</td>
-<td>
-Sarah Urbut
-</td>
-<td>
-2019-12-26
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/power.Rmd/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>We can see that the maximal power achieved is roughly 0.5, which is due to the fact that the demonstrated logOR considered here, -0.44, and corresponding standard error, 0.21, are so small, that the maximal posterior probability that they arose from the non-zero component is ~0.08 even with a <span class="math inline">\(\pi_{alternative}\)</span> of 0.99.</p>
 <p>We can also for a given <span class="math inline">\(\pi\)</span>, and consider over all prior <span class="math inline">\(\sigma^{2}\)</span>:</p>
 <pre class="r"><code>##Simulation script
@@ -816,6 +783,74 @@ powermat=apply(test,2,function(x){1-mean(x&lt;0.41&amp;x&gt;-0.41)})
 minsig=0.1;maxsig=2;inc=0.05
 sigmas=seq(minsig,maxsig,by=inc)
 plot(sigmas,powermat,xlab=expression(paste(&quot;Prior &quot;,sigma)), ylab=&quot;Power&quot;, main=expression(paste(&quot;Power vs Prior &quot;, sigma)) ,pch=1,cex=0.5,col=&quot;red&quot;)</code></pre>
+<p><img src="figure/power.Rmd/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-2-1">
+Past versions of unnamed-chunk-2-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-2-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/surbut/nejm/blob/ac7a9f09d612d64ccb55a304a261fc0b7f1f51be/docs/figure/power.Rmd/unnamed-chunk-2-1.png" target="_blank">ac7a9f0</a>
+</td>
+<td>
+Sarah Urbut
+</td>
+<td>
+2019-12-30
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/surbut/nejm/blob/40f9bd858097f968a1bc60032dbe4ff8607e8d42/docs/figure/power.Rmd/unnamed-chunk-2-1.png" target="_blank">40f9bd8</a>
+</td>
+<td>
+Sarah Urbut
+</td>
+<td>
+2019-12-27
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/surbut/nejm/blob/05086d86b34fb4d66c43c4d3851581d796c4c376/docs/figure/power.Rmd/unnamed-chunk-2-1.png" target="_blank">05086d8</a>
+</td>
+<td>
+Sarah Urbut
+</td>
+<td>
+2019-12-26
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Here we can see that the choice of <span class="math inline">\(\sigma\)</span> matters much more than the choice of <span class="math inline">\(\pi_0\)</span>, and that the power of the simulation to detect an effect if it truly exists seems to be maximal with prior <span class="math inline">\(\sigma^{2}\)</span> of ~ 0.5 and that the maximal power achieved is roughly 50%. This stems from the fact that even under a situation with <span class="math inline">\(\pi_0\)</span> at 0, such a small observed logOR is equally likely to stem from the null as the alternaitve. Let’s examine for larger dm, one that is twice the first.</p>
+<pre class="r"><code>dm=2*dm
+
+pi0s=seq(0.01,1,by=0.05)##proportional weight on 0 component
+pis=1-pi0s
+simmat=runpisim(dm = dm,dse = dse,priorsd = 0.5)
+powermat=apply(simmat,2,function(x){1-mean(x&lt;0.41&amp;x&gt;-0.41)})
+plot(pis,powermat,xlab=expression(paste(1-pi,&quot;0&quot;)), main=expression(paste(&quot;Power vs &quot;, 1-pi,&quot;0&quot;)) ,pch=1,cex=0.5,col=&quot;red&quot;)</code></pre>
 <p><img src="figure/power.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-3-1">
@@ -839,6 +874,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/surbut/nejm/blob/ac7a9f09d612d64ccb55a304a261fc0b7f1f51be/docs/figure/power.Rmd/unnamed-chunk-3-1.png" target="_blank">ac7a9f0</a>
+</td>
+<td>
+Sarah Urbut
+</td>
+<td>
+2019-12-30
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/surbut/nejm/blob/40f9bd858097f968a1bc60032dbe4ff8607e8d42/docs/figure/power.Rmd/unnamed-chunk-3-1.png" target="_blank">40f9bd8</a>
@@ -876,139 +922,12 @@ Sarah Urbut
 </table>
 </div>
 </div>
-<p>Here we can see that the choice of <span class="math inline">\(\sigma\)</span> matters much more than the choice of <span class="math inline">\(\pi_0\)</span>, and that the power of the simulation to detect an effect if it truly exists seems to be maximal with prior <span class="math inline">\(\sigma^{2}\)</span> of ~ 0.5 and that the maximal power achieved is roughly 50%. This stems from the fact that even under a situation with <span class="math inline">\(\pi_0\)</span> at 0, such a small observed logOR is equally likely to stem from the null as the alternaitve. Let’s examine for larger dm, one that is twice the first.</p>
-<pre class="r"><code>dm=2*dm
-
-pi0s=seq(0.01,1,by=0.05)##proportional weight on 0 component
-pis=1-pi0s
-simmat=runpisim(dm = dm,dse = dse,priorsd = 0.5)
-powermat=apply(simmat,2,function(x){1-mean(x&lt;0.41&amp;x&gt;-0.41)})
-plot(pis,powermat,xlab=expression(paste(1-pi,&quot;0&quot;)), main=expression(paste(&quot;Power vs &quot;, 1-pi,&quot;0&quot;)) ,pch=1,cex=0.5,col=&quot;red&quot;)</code></pre>
-<p><img src="figure/power.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-4-1">
-Past versions of unnamed-chunk-4-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-4-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/surbut/nejm/blob/40f9bd858097f968a1bc60032dbe4ff8607e8d42/docs/figure/power.Rmd/unnamed-chunk-4-1.png" target="_blank">40f9bd8</a>
-</td>
-<td>
-Sarah Urbut
-</td>
-<td>
-2019-12-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/surbut/nejm/blob/8ac49782ecf6f0050214525b222a92174a291275/docs/figure/power.Rmd/unnamed-chunk-4-1.png" target="_blank">8ac4978</a>
-</td>
-<td>
-Sarah Urbut
-</td>
-<td>
-2019-12-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/surbut/nejm/blob/05086d86b34fb4d66c43c4d3851581d796c4c376/docs/figure/power.Rmd/unnamed-chunk-4-1.png" target="_blank">05086d8</a>
-</td>
-<td>
-Sarah Urbut
-</td>
-<td>
-2019-12-26
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
 <pre class="r"><code>test=runSigmasim(dm = dm,dse = dse,pi0=0.5)
 powermat=apply(test,2,function(x){1-mean(x&lt;0.41&amp;x&gt;-0.41)})
 minsig=0.1;maxsig=2;inc=0.05
 sigmas=seq(minsig,maxsig,by=inc)
 plot(sigmas,powermat,xlab=expression(paste(&quot;Prior &quot;,sigma)), ylab=&quot;Power&quot;, main=expression(paste(&quot;Power vs &quot;, sigma)) ,pch=1,cex=0.5,col=&quot;red&quot;)</code></pre>
-<p><img src="figure/power.Rmd/unnamed-chunk-4-2.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-4-2">
-Past versions of unnamed-chunk-4-2.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-4-2" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/surbut/nejm/blob/40f9bd858097f968a1bc60032dbe4ff8607e8d42/docs/figure/power.Rmd/unnamed-chunk-4-2.png" target="_blank">40f9bd8</a>
-</td>
-<td>
-Sarah Urbut
-</td>
-<td>
-2019-12-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/surbut/nejm/blob/8ac49782ecf6f0050214525b222a92174a291275/docs/figure/power.Rmd/unnamed-chunk-4-2.png" target="_blank">8ac4978</a>
-</td>
-<td>
-Sarah Urbut
-</td>
-<td>
-2019-12-27
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/surbut/nejm/blob/05086d86b34fb4d66c43c4d3851581d796c4c376/docs/figure/power.Rmd/unnamed-chunk-4-2.png" target="_blank">05086d8</a>
-</td>
-<td>
-Sarah Urbut
-</td>
-<td>
-2019-12-26
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/power.Rmd/unnamed-chunk-3-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>We can see the importance of a larger parameter value, which really only emphasizes the need for such ‘sobriety’ with larger trials. Perhpas we should focus on a trial with a larger demonstrated effect, and show the importance of ‘sobriety’ in cases in which one is eager to reject the null, because I think focusing on power to detect a very small effect when we’re trying to emphasize skepticisim detracts from our focus.</p>
 <br>
 <p>
