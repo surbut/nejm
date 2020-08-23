@@ -1,0 +1,119 @@
+---
+title: "Simulating Power"
+output:
+  pdf_document:
+    toc: no
+  html_notebook: default
+  html_document:
+    df_print: paged
+    toc: no
+  workflowr::wflow_html:
+    code_folding: show
+    toc: no
+editor_options:
+  chunk_output_type: inline
+---
+
+Power Analysis
+
+We wish to simulate a non-zero logOR in a study with sample size large enough that the effect can be detected at $80%$ in a frequentist analysis. To start with, let's test a situation in which the logOR is actually 1.2, with a population SD of $0.20$ and a sample size of 100.
+
+The goal is to test our power to estimate the power to detect a true difference (at say, a 0.05 frequentist $\alpha$ threshold) given that the sampling distribution arises from a mixture normal with $\pi_{0}$ component on a 'spike' at 0, and the slab (or 1- $\pi_{0}$ componenet) on an alternative compoenent that quantifies our uncertainty about a non-zero estimate of the underlying logOR.  
+
+In this paper, the standard error $\hat\sigma$ was 0.21. This means that the rejection region that the logOR is significantly different than 0 at an $\alpha$ of 0.05 would be +/- 1.96*0.21 = +/- 0.41.
+
+We can sample from our posterior at various levels of $\pi$ and $\hat{sigma}$ and compute how often the null is appropriately rejected.
+
+
+
+
+We should sample from the mixture distribution and determine how many times the $95\%$ credible interval excludes 0 for different choces of $\sigma$ and $\pi$, assuming that the observed logOR is the true logOR. We thus seek to determine how frequently a values chosen from posterior distribution excludes CI (but is this ok, using a posterior probability for frequentist sampling?)
+
+In the following script, we simulate for a range of pis and a fixed prior sigma, and compute how many time the posterior mean and variance produce a random variable that correctly rejects alternaitve. Here we plot for a prior $\sigma$ of 0.5, as discovered in the bottom simulation is the best choice of $\sigma$.
+
+
+```{r}
+
+source("~/nejm/code/scripts.R")## scripts to compute posterior mean, variance and posterior weights
+
+##Simulation script
+runpisim=function(dm,priorsd,dse,priormean=0,sim=1000){
+pi0s=seq(0.01,1,by=0.05)##proportional weight on 0 component
+
+pis=1-pi0s##proportional weight on slab (non0 component)
+simmat=matrix(NA,ncol=length(pis),nrow=sim)
+for(i in 1:length(pis)){
+p1=pis[i]
+p=pipost(p1,dataSE=dse,datamean=dm,priorsd=priorsd)###computer posterior weight on nonzero component using chosen prior weight, i.e., p(Z=alternative| data)
+s=rbinom(1,n = sim,prob=p)##create a list indexing whether comes from null or real depending on posterior weight, where for each simulation, an RV (0,1) is simulated from Binomial(n=1,size=1) according to posterio weight
+pm=sapply(s,function(s){post_mean(priormean=0,priorsd=s*1,datamean=dm,datase=dse)})##depending on whether null or alternative chosen, simulate posterior mean of distribution
+ps=sqrt(sapply(s,function(s){post_var(priorsd=s*1,datase=dse)}))##depending on whether null or alternative chosen, simulate posterior mean of distribution
+b=sapply(seq(1:length(pm)),function(x){rnorm(1,mean = pm[x],sd=ps[x])})##for each simulation choose a rv according to simulated mean and variance
+simmat[,i]=b
+}
+return(simmat)}
+
+dm=-0.44
+dse=0.21
+
+
+pi0s=seq(0.01,1,by=0.05)##proportional weight on 0 component
+pis=1-pi0s
+simmat=runpisim(dm = dm,dse = dse,priorsd = 0.5)
+powermat=apply(simmat,2,function(x){1-mean(x<0.41&x>-0.41)})
+plot(pis,powermat,xlab=expression(paste(1-pi,"0")), main=expression(paste("Power vs ", 1-pi,"0")) ,pch=1,cex=0.5,col="red")
+```
+
+
+We can see that the maximal power achieved is roughly 0.5, which is due to the fact that the demonstrated logOR considered here, -0.44, and corresponding standard error, 0.21, are so small, that the maximal posterior probability that they arose from the non-zero component is ~0.08 even with a $\pi_{alternative}$ of 0.99.
+
+
+We can also for a given $\pi$, and consider over all prior $\sigma^{2}$:
+
+```{r}
+##Simulation script
+runSigmasim=function(dm,pi0,dse,minsig=0.1,maxsig=2,inc=0.05,priormean=0,sim=10000){
+sigmas=seq(minsig,maxsig,by=inc)
+pis=1-pi0##proportional weight on slab (non0 component)
+simmat=matrix(NA,ncol=length(sigmas),nrow=sim)
+for(i in 1:length(sigmas)){
+priorsd=sigmas[i]
+p1=pis
+p=pipost(p1,dataSE=dse,datamean=dm,priorsd=priorsd)###computer posterior weight on nonzero component using chosen prior weight
+s=rbinom(1,n = sim,prob=p)##create a list indexing whether comes from null or real depending on posterior weight, where for each simulation, an RV (0,1) is simulated from Binomial(n=1,size=1) according to posterio weight
+pm=sapply(s,function(s){post_mean(priormean=0,priorsd=s*1,datamean=dm,datase=dse)})##depending on whether null or alternative chosen, simulate posterior mean of distribution
+ps=sqrt(sapply(s,function(s){post_var(priorsd=s*1,datase=dse)}))##depending on whether null or alternative chosen, simulate posterior mean of distribution
+b=sapply(seq(1:length(pm)),function(x){rnorm(1,mean = pm[x],sd=ps[x])})##for each simulation choose a rv according to simulated mean and variance
+simmat[,i]=b
+}
+return(simmat)
+}
+
+
+test=runSigmasim(dm = dm,dse = dse,pi0=0.5)
+powermat=apply(test,2,function(x){1-mean(x<0.41&x>-0.41)})
+minsig=0.1;maxsig=2;inc=0.05
+sigmas=seq(minsig,maxsig,by=inc)
+plot(sigmas,powermat,xlab=expression(paste("Prior ",sigma)), ylab="Power", main=expression(paste("Power vs Prior ", sigma)) ,pch=1,cex=0.5,col="red")
+```
+
+Here we can see that the choice of $\sigma$ matters much more than the choice of $\pi_0$, and that the power of the simulation to detect an effect if it truly exists seems to be maximal with prior $\sigma^{2}$ of ~ 0.5 and that the maximal power achieved is roughly 50%. This stems from the fact that even under a situation with $\pi_0$ at 0, such a small observed logOR is equally likely to stem from the null as the alternaitve. Let's examine for larger dm, one that is twice the first.
+
+```{r}
+
+dm=2*dm
+
+pi0s=seq(0.01,1,by=0.05)##proportional weight on 0 component
+pis=1-pi0s
+simmat=runpisim(dm = dm,dse = dse,priorsd = 0.5)
+powermat=apply(simmat,2,function(x){1-mean(x<0.41&x>-0.41)})
+plot(pis,powermat,xlab=expression(paste(1-pi,"0")), main=expression(paste("Power vs ", 1-pi,"0")) ,pch=1,cex=0.5,col="red")
+
+test=runSigmasim(dm = dm,dse = dse,pi0=0.5)
+powermat=apply(test,2,function(x){1-mean(x<0.41&x>-0.41)})
+minsig=0.1;maxsig=2;inc=0.05
+sigmas=seq(minsig,maxsig,by=inc)
+plot(sigmas,powermat,xlab=expression(paste("Prior ",sigma)), ylab="Power", main=expression(paste("Power vs ", sigma)) ,pch=1,cex=0.5,col="red")
+```
+
+We can see the importance of a larger parameter value, which really only emphasizes the need for such 'sobriety' with larger trials. Perhpas we should focus on a trial with a larger demonstrated effect, and show the importance of 'sobriety' in cases in which one is eager to reject the null, because I think focusing on power to detect a very small effect when we're trying to emphasize skepticisim detracts from our focus.
