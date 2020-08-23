@@ -1,9 +1,17 @@
 ---
 title: "Power calculations"
 output:
-  pdf_document: default
-  word_document: default
-  html_document: default
+  pdf_document:
+    toc: no
+  html_notebook: default
+  html_document:
+    df_print: paged
+    toc: no
+  workflowr::wflow_html:
+    code_folding: show
+    toc: no
+editor_options:
+  chunk_output_type: inline
 ---
 
 ```{r setup, include=FALSE}
