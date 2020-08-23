@@ -117,3 +117,6 @@ plot(sigmas,powermat,xlab=expression(paste("Prior ",sigma)), ylab="Power", main=
 ```
 
 We can see the importance of a larger parameter value, which really only emphasizes the need for such 'sobriety' with larger trials. Perhpas we should focus on a trial with a larger demonstrated effect, and show the importance of 'sobriety' in cases in which one is eager to reject the null, because I think focusing on power to detect a very small effect when we're trying to emphasize skepticisim detracts from our focus.
+
+
+We can also simulate data from a spike and slab prior, and see how accurately it is captured by a range of spike and slab priors, and using frequentist analysis.
