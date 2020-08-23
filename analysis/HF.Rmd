@@ -1,0 +1,70 @@
+---
+title: "Power calculations"
+output:
+  pdf_document: default
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Power
+
+If we have two independent samples of size n, and we reject the two sample null hypothesis that $\mu_{1}= \mu_{2}$, then the power of the one-tailed test is equal to 1 − $\beta$ where
+
+Here's a [link](http://statweb.stanford.edu/~susan/courses/s141/hopower.pdf) to a nice site with plots to gain a better understanding.
+
+$df = 2n − 2$ and the noncentrality parameter takes the value $\delta = d\sqrt{n/2}$ where d is Cohen’s effect size $$d = \dfrac{\mu_2-\mu_1}{\sigma}$$
+
+Assuming that the two populations have the same standard deviation $\sigma$ (homogeneity of variances):
+
+```{r pressure, echo=FALSE}
+n=5
+tsample=2
+sig.level=0.05
+tside=1
+delta=55
+sd=31
+df <- pmax(1e-07, n - 1) * tsample
+```
+
+So the calculation is to find the proportion of the *alternative* curve that exceeds the rejection region of the null. We find the rejection quantile of the *null* t-distirbuion that correspondes to an $\alpha$ of 0.05.
+```{r}
+rejection=qt(sig.level/tside, df, lower.tail = FALSE)
+```
+
+Then we compute the cumulative distribution of the *alternative* distribution that exceeds it. Here, ncp is the non-centrality parameter specifying the 'off-center' nature of the alternative as explained above, and df is 2n-2 By specifying lower tail = FALSE we compute everything to the RIGHT of the rejection region.
+
+```{r}
+pt(rejection, df, ncp = sqrt(n/tsample) * delta/sd, lower.tail = FALSE)
+````
+
+
+##Here plot the distribution of the alternative
+
+```{r}
+plot(density(rt(10000000,df=8,ncp = sqrt(n/tsample) * delta/sd)),xlim=c(0,10),main="Alternative vs Null, Rejection")
+lines(density(rt(1000000,df=8)))
+###ncp, or the non-centrality  parameter, is like the deviation of the 
+abline(v=qt(sig.level/tside, df, lower.tail = FALSE),col="red")
+
+```
+
+Power (0.80) is the area of the alternative curve to the right of  the rejection line.
+
+Fortunately, there is code for all of this!
+```{r}
+
+#PowerLVESV
+power.t.test(n = 5, d = 55, sig.level = 0.05 ,sd=31,alternative="one.sided")
+
+#SWmean
+power.t.test(n = 15, d = 2.5, sig.level = 0.05 ,sd=2.6,alternative="one.sided")
+
+##SW_Netherlands
+
+power.t.test(n = 12,d = 2.6, sig.level = 0.05,sd=2.5,alternative="one.sided")
+```
+
+As you  can see it preserves confirms  everything you've computed, althouth the power is slightly  different for the SW Netherlands analysis.
